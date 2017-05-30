@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.majy.scoremanager.mapper.PlayerInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.majy.scoremanager.domain.PlayerInfo" >
+        <id column="playerId" property="playerId" jdbcType="VARCHAR" />
+        <result column="gameId" property="gameId" jdbcType="VARCHAR" />
+        <result column="playerNum" property="playerNum" jdbcType="INTEGER" />
+        <result column="playerName" property="playerName" jdbcType="VARCHAR" />
+        <result column="playerDepartment" property="playerDepartment" jdbcType="VARCHAR" />
+        <result column="playerSum" property="playerSum" jdbcType="DECIMAL" />
+        <result column="playerAverage" property="playerAverage" jdbcType="DECIMAL" />
+        <result column="playerRanking" property="playerRanking" jdbcType="INTEGER" />
+        <result column="playerImg" property="playerImg" jdbcType="VARCHAR" />
+        <result column="playerAddBy" property="playerAddBy" jdbcType="VARCHAR" />
+        <result column="playerDeleted" property="playerDeleted" jdbcType="VARCHAR" />
+        <result column="playerActive" property="playerActive" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getAll" resultType="list" resultMap="BaseResultMap"  >
+        SELECT
+        *
+        FROM playerInfo
+    </select>
+
+    <select id="getPlayerList" parameterType="com.majy.scoremanager.domain.PlayerInfo" resultType="list" resultMap="BaseResultMap"  >
+        SELECT
+        *
+        FROM playerInfo
+        <where>
+            <if test="playerId != null and playerId != '' ">
+                and playerId = #{playerId}
+            </if>
+            <if test="gameId != null and gameId != '' ">
+                and gameId = #{gameId}
+            </if>
+            <if test="playerNum != null and playerNum != '' ">
+                and playerNum = #{playerNum}
+            </if>
+            <if test="playerName != null and playerName != '' ">
+                and playerName = #{playerName}
+            </if>
+            <if test="playerDepartment != null and playerDepartment != '' ">
+                and playerDepartment = #{playerDepartment}
+            </if>
+            <if test="playerDeleted != null and playerDeleted != '' ">
+                and playerDeleted = #{playerDeleted}
+            </if>
+            <if test="playerActive != null and playerActive != '' ">
+                and playerActive = #{playerActive}
+            </if>
+        </where>
+        ORDER BY gameId,playerAverage DESC ,playerNum
+    </select>
+
+    <select id="getPlayerListByGameId" parameterType="java.lang.String" resultType="list" resultMap="BaseResultMap"  >
+        SELECT
+        *
+        FROM playerInfo
+        WHERE gameId = #{gameId}
+        ORDER BY playerRanking,playerNum
+    </select>
+
+    <select id="getPlayerInfoById" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        SELECT
+        *
+        FROM playerInfo
+        WHERE playerId = #{playerId}
+    </select>
+
+    <insert id="insert" parameterType="com.majy.scoremanager.domain.PlayerInfo" >
+        INSERT INTO
+        playerInfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="playerId != null and playerId != '' ">
+                playerId,
+            </if>
+            <if test="gameId != null and gameId != '' ">
+                gameId,
+            </if>
+            <if test="playerNum != null and playerNum != '' ">
+                playerNum,
+            </if>
+            <if test="playerName != null and playerName != '' ">
+                 playerName,
+            </if>
+            <if test="playerDepartment != null and playerDepartment != '' ">
+                 playerDepartment,
+            </if>
+            <if test="playerDeleted != null and playerDeleted != '' ">
+                 playerDeleted,
+            </if>
+            <if test="playerActive != null and playerActive != '' ">
+                 playerActive,
+            </if>
+            <if test="playerImg != null and playerImg != '' ">
+                playerImg,
+            </if>
+            <if test="playerAddBy != null and playerAddBy != '' ">
+                playerAddBy,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="playerId != null and playerId != '' ">
+                #{playerId},
+            </if>
+            <if test="gameId != null and gameId != '' ">
+                #{gameId},
+            </if>
+            <if test="playerNum != null and playerNum != '' ">
+                #{playerNum},
+            </if>
+            <if test="playerName != null and playerName != '' ">
+                #{playerName},
+            </if>
+            <if test="playerDepartment != null and playerDepartment != '' ">
+                #{playerDepartment},
+            </if>
+            <if test="playerDeleted != null and playerDeleted != '' ">
+                #{playerDeleted},
+            </if>
+            <if test="playerActive != null and playerActive != '' ">
+                #{playerActive},
+            </if>
+            <if test="playerImg != null and playerImg != '' ">
+                #{playerImg},
+            </if>
+            <if test="playerAddBy != null and playerAddBy != '' ">
+                #{playerAddBy},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.majy.scoremanager.domain.PlayerInfo" >
+        UPDATE
+        playerInfo
+        <set>
+        <if test="gameId != null and gameId != ''">gameId = #{gameId},</if>
+        <if test="playerNum != null and playerNum != ''">playerNum = #{playerNum},</if>
+        <if test="playerName != null and playerName != ''">playerName = #{playerName},</if>
+        <if test="playerDepartment != null and playerDepartment != ''">playerDepartment = #{playerDepartment},</if>
+        <if test="playerSum != null and playerSum != ''">playerSum = #{playerSum},</if>
+        <if test="playerAverage != null and playerAverage != ''">playerAverage = #{playerAverage},</if>
+        <if test="playerRanking != null and playerRanking != ''">playerRanking = #{playerRanking},</if>
+        <if test="playerImg != null and playerImg != ''">playerImg = #{playerImg},</if>
+        <if test="playerAddBy != null and playerAddBy != ''">playerAddBy = #{playerAddBy},</if>
+        <if test="playerDeleted != null and playerDeleted != ''">playerDeleted = #{playerDeleted},</if>
+        <if test="playerActive != null and playerActive != ''">playerActive = #{playerActive},</if>
+        </set>
+        WHERE
+        playerId = #{playerId}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String" >
+        DELETE FROM
+        playerInfo
+        WHERE
+        playerId =#{playerId}
+    </delete>
+
+</mapper>

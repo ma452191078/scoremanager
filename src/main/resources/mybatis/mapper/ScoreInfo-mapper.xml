@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.majy.scoremanager.mapper.ScoreInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.majy.scoremanager.domain.ScoreInfo" >
+        <id column="scoreId" property="scoreId" jdbcType="VARCHAR" />
+        <result column="scoreValue" property="scoreValue" jdbcType="DECIMAL" />
+        <result column="gameId" property="gameId" jdbcType="VARCHAR" />
+        <result column="playerId" property="playerId" jdbcType="VARCHAR" />
+        <result column="addTime" property="addTime" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getAll" resultType="list" resultMap="BaseResultMap"  >
+        SELECT
+        *
+        FROM scoreinfo
+    </select>
+
+    <select id="getScoreList" parameterType="com.majy.scoremanager.domain.ScoreInfo" resultType="list" resultMap="BaseResultMap"  >
+        SELECT
+        *
+        FROM playerInfo
+        <where>
+            <if test="scoreId != null and scoreId != '' ">
+                and scoreId = #{scoreId}
+            </if>
+            <if test="gameId != null and gameId != '' ">
+                and gameId = #{gameId}
+            </if>
+            <if test="playerId != null and playerId != '' ">
+                and playerId = #{playerId}
+            </if>
+            <if test="addTime != null and addTime != '' ">
+                and addTime = #{addTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="getScoreListByPlayer" parameterType="java.lang.String" resultType="list" resultMap="BaseResultMap" >
+        SELECT
+        *
+        FROM scoreinfo
+        WHERE playerId = #{playerId}
+        ORDER BY scoreValue
+    </select>
+
+
+    <select id="getScoreInfoById" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        SELECT
+        *
+        FROM scoreinfo
+        WHERE scoreId = #{scoreId}
+    </select>
+
+    <insert id="insert" parameterType="com.majy.scoremanager.domain.ScoreInfo" >
+        INSERT INTO
+        scoreinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scoreId != null and scoreId != '' ">
+                scoreId,
+            </if>
+            <if test="scoreValue != null and scoreValue != '' ">
+                scoreValue,
+            </if>
+            <if test="gameId != null and gameId != '' ">
+                gameId,
+            </if>
+            <if test="playerId != null and playerId != '' ">
+                playerId,
+            </if>
+                addTime
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scoreId != null and scoreId != '' ">
+                #{scoreId},
+            </if>
+            <if test="scoreValue != null and scoreValue != '' ">
+                #{scoreValue},
+            </if>
+            <if test="gameId != null and gameId != '' ">
+                #{gameId},
+            </if>
+            <if test="playerId != null and playerId != '' ">
+                #{playerId},
+            </if>
+            NOW()
+
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.majy.scoremanager.domain.ScoreInfo" >
+        UPDATE
+        scoreinfo
+        <set>
+        <if test="scoreValue != null scoreValue != ''">scoreValue = #{scoreValue},</if>
+        <if test="gameId != null and gameId != ''">gameId = #{gameId},</if>
+        <if test="playerId != null playerId != ''">playerId = #{playerId},</if>
+        </set>
+        WHERE
+        scoreId = #{scoreId}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String" >
+        DELETE FROM
+        scoreinfo
+        WHERE
+        scoreId =#{scoreId}
+    </delete>
+
+</mapper>

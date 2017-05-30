@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.majy.scoremanager.mapper.GameInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.majy.scoremanager.domain.GameInfo" >
+        <id column="gameId" property="gameId" jdbcType="VARCHAR" />
+        <result column="gameName" property="gameName" jdbcType="VARCHAR" />
+        <result column="startDate" property="startDate" jdbcType="VARCHAR" />
+        <result column="endDate" property="endDate" jdbcType="VARCHAR" />
+        <result column="gameDeleted" property="endDate" jdbcType="VARCHAR" />
+        <result column="addBy" property="addBy" jdbcType="VARCHAR" />
+        <result column="gameOwner" property="gameOwner" jdbcType="VARCHAR" />
+        <result column="gameDeleted" property="gameDeleted" jdbcType="VARCHAR" />
+        <result column="gameQr" property="gameQr" jdbcType="VARCHAR" />
+        <result column="gameUrl" property="gameUrl" jdbcType="VARCHAR" />
+
+    </resultMap>
+
+    <select id="getAll" resultMap="BaseResultMap"  >
+        SELECT
+        *
+        FROM gameinfo
+    </select>
+
+    <select id="getGameList" parameterType="com.majy.scoremanager.domain.GameInfo" resultType="list" resultMap="BaseResultMap"  >
+        SELECT
+        *
+        FROM gameinfo
+        <where>
+            <if test="gameId != null and gameId != '' ">
+                and gameId = #{gameId}
+            </if>
+            <if test="gameName != null and gameName != '' ">
+                and gameName = #{gameName}
+            </if>
+            <if test="startDate != null and startDate != '' ">
+                and startDate = #{startDate}
+            </if>
+            <if test="endDate != null and endDate != '' ">
+                and endDate = #{endDate}
+            </if>
+            <if test="gameDeleted != null and gameDeleted != '' ">
+                and gameDeleted = #{gameDeleted}
+            </if>
+            <if test="gameOwner != null and gameOwner != '' ">
+                and gameOwner = #{gameOwner}
+            </if>
+            <if test="gameDeleted != null and gameDeleted != '' ">
+                and gameDeleted = #{gameDeleted}
+            </if>
+        </where>
+    </select>
+
+    <select id="getGameInfoById" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        SELECT
+        *
+        FROM gameinfo
+        WHERE gameId = #{gameId}
+    </select>
+
+    <insert id="insert" parameterType="com.majy.scoremanager.domain.GameInfo" >
+        INSERT INTO
+        gameinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gameId != null and gameId != '' ">
+                gameId,
+            </if>
+            <if test="gameName != null and gameName != '' ">
+                gameName,
+            </if>
+            <if test="gameActive != null and gameActive != '' ">
+                gameActive,
+            </if>
+            <if test="startDate != null and startDate != '' ">
+                startDate,
+            </if>
+            <if test="endDate != null and endDate != '' ">
+                endDate,
+            </if>
+            <if test="gameDeleted != null and gameDeleted != '' ">
+                gameDeleted,
+            </if>
+            <if test="addBy != null and addBy != '' ">
+                addBy,
+            </if>
+            <if test="gameOwner != null and gameOwner != '' ">
+                gameOwner,
+            </if>
+            <if test="gameDeleted != null and gameDeleted != '' ">
+                gameDeleted,
+            </if>
+            <if test="gameQr != null and gameQr != '' ">
+                gameQr,
+            </if>
+            <if test="gameUrl != null and gameUrl != '' ">
+                gameUrl,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gameId != null and gameId != '' ">
+                #{gameId},
+            </if>
+            <if test="gameName != null and gameName != '' ">
+                #{gameName},
+            </if>
+            <if test="gameActive != null and gameActive != '' ">
+                #{gameActive},
+            </if>
+            <if test="startDate != null and startDate != '' ">
+                #{startDate},
+            </if>
+            <if test="endDate != null and endDate != '' ">
+                #{endDate},
+            </if>
+            <if test="gameDeleted != null and gameDeleted != '' ">
+                #{gameDeleted},
+            </if>
+            <if test="gameOwner != null and gameOwner != '' ">
+                #{gameOwner},
+            </if>
+            <if test="gameDeleted != null and gameDeleted != '' ">
+                #{gameDeleted},
+            </if>
+            <if test="gameQr != null and gameQr != '' ">
+                #{gameQr},
+            </if>
+            <if test="gameUrl != null and gameUrl != '' ">
+                #{gameUrl},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.majy.scoremanager.domain.GameInfo" >
+        UPDATE
+        gameinfo
+        <set>
+            <if test="gameName != null and gameName != ''">gameName = #{gameName},</if>
+            <if test="startDate != null and startDate != ''">startDate = #{startDate},</if>
+            <if test="endDate != null and endDate != ''">endDate = #{endDate},</if>
+            <if test="gameDeleted != null and gameDeleted != ''">gameDeleted = #{gameDeleted},</if>
+            <if test="gameOwner != null and gameOwner != ''">gameOwner = #{gameOwner},</if>
+            <if test="gameDeleted != null and gameDeleted != ''">gameDeleted = #{gameDeleted},</if>
+            <if test="gameActive != null and gameActive != ''">gameActive = #{gameActive},</if>
+        </set>
+        WHERE
+        gameId = #{gameId}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String" >
+        DELETE FROM
+        gameinfo
+        WHERE
+        gameId =#{gameId}
+    </delete>
+
+</mapper>

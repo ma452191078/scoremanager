@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+      password: SDL@webchat2015
+      url: jdbc:mysql://114.215.97.217:3306/imetting?useUnicode=true&characterEncoding=UTF-8
+      filters: stat
+      maxActive: 20
+      initialSize: 1
+      maxWait: 60000
+      minIdle: 1
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxOpenPreparedStatements: 20
+#      dbcp2:
+#        validation-query: SELECT 1
+#        test-while-idle: true
+#        time-between-eviction-runs-millis: 30000
+#        min-evictable-idle-time-millis: 1800000
+#        num-tests-per-eviction-run: 30
+
+
