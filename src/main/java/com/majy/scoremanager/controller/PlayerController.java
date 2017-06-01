@@ -163,6 +163,7 @@ public class PlayerController {
             playerInfo.setPlayerAverage(avgScore);
             int result = playerInfoMapper.update(playerInfo);
             if (result > 0){
+                playerInfo = playerInfoMapper.getPlayerInfoById(playerId);
                 PlayerInfo searchInfo = new PlayerInfo();
                 searchInfo.setPlayerActive("1");
                 searchInfo.setGameId(playerInfo.getGameId());

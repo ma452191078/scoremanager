@@ -19,13 +19,13 @@
     <select id="getAll" resultType="list" resultMap="BaseResultMap"  >
         SELECT
         *
-        FROM playerInfo
+        FROM playerinfo
     </select>
 
     <select id="getPlayerList" parameterType="com.majy.scoremanager.domain.PlayerInfo" resultType="list" resultMap="BaseResultMap"  >
         SELECT
         *
-        FROM playerInfo
+        FROM playerinfo
         <where>
             <if test="playerId != null and playerId != '' ">
                 and playerId = #{playerId}
@@ -55,7 +55,7 @@
     <select id="getPlayerListByGameId" parameterType="java.lang.String" resultType="list" resultMap="BaseResultMap"  >
         SELECT
         *
-        FROM playerInfo
+        FROM playerinfo
         WHERE gameId = #{gameId}
         ORDER BY playerRanking,playerNum
     </select>
@@ -63,13 +63,13 @@
     <select id="getPlayerInfoById" parameterType="java.lang.String" resultMap="BaseResultMap" >
         SELECT
         *
-        FROM playerInfo
+        FROM playerinfo
         WHERE playerId = #{playerId}
     </select>
 
     <insert id="insert" parameterType="com.majy.scoremanager.domain.PlayerInfo" >
         INSERT INTO
-        playerInfo
+        playerinfo
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="playerId != null and playerId != '' ">
                 playerId,
@@ -132,7 +132,7 @@
 
     <update id="update" parameterType="com.majy.scoremanager.domain.PlayerInfo" >
         UPDATE
-        playerInfo
+        playerinfo
         <set>
         <if test="gameId != null and gameId != ''">gameId = #{gameId},</if>
         <if test="playerNum != null and playerNum != ''">playerNum = #{playerNum},</if>
@@ -152,7 +152,7 @@
 
     <delete id="delete" parameterType="java.lang.String" >
         DELETE FROM
-        playerInfo
+        playerinfo
         WHERE
         playerId =#{playerId}
     </delete>

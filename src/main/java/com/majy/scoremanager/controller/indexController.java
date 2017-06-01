@@ -15,7 +15,6 @@ public class indexController {
     @RequestMapping("/")
     public String helloHtml(Map<String,Object> map){
 
-        map.put("hello","from TemplateController.helloHtml");
         return"/index";
     }
 }

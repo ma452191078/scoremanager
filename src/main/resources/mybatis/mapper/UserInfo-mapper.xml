@@ -41,7 +41,7 @@
         userinfo
         <set>
         <if test="userName != null and userName != ''">userName = #{userName},</if>
-        <if test="userPassword != null userPassword != ''">userPassword = #{userPassword},</if>
+        <if test="userPassword != null and userPassword != ''">userPassword = #{userPassword},</if>
         </set>
         WHERE
         userId = #{userId}
