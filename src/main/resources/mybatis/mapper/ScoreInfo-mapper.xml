@@ -7,6 +7,7 @@
         <result column="gameId" property="gameId" jdbcType="VARCHAR" />
         <result column="playerId" property="playerId" jdbcType="VARCHAR" />
         <result column="addTime" property="addTime" jdbcType="VARCHAR" />
+        <result column="judgeId" property="judgeId" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="getAll" resultType="list" resultMap="BaseResultMap"  >
@@ -18,7 +19,7 @@
     <select id="getScoreList" parameterType="com.majy.scoremanager.domain.ScoreInfo" resultType="list" resultMap="BaseResultMap"  >
         SELECT
         *
-        FROM playerInfo
+        FROM scoreinfo
         <where>
             <if test="scoreId != null and scoreId != '' ">
                 and scoreId = #{scoreId}
@@ -32,6 +33,10 @@
             <if test="addTime != null and addTime != '' ">
                 and addTime = #{addTime}
             </if>
+            <if test="judgeId != null and judgeId != '' ">
+                and judgeId = #{judgeId}
+            </if>
+
         </where>
     </select>
 
@@ -67,6 +72,9 @@
             <if test="playerId != null and playerId != '' ">
                 playerId,
             </if>
+            <if test="judgeId != null and judgeId != '' ">
+                judgeId,
+            </if>
                 addTime
 
         </trim>
@@ -82,6 +90,9 @@
             </if>
             <if test="playerId != null and playerId != '' ">
                 #{playerId},
+            </if>
+            <if test="judgeId != null and judgeId != '' ">
+                #{judgeId},
             </if>
             NOW()
 

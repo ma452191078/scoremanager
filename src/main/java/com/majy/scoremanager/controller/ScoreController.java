@@ -8,10 +8,8 @@ import com.majy.scoremanager.mapper.PlayerInfoMapper;
 import com.majy.scoremanager.mapper.ScoreInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +36,23 @@ public class ScoreController {
         if (playerId != null && !"".equals(playerId))
             scoreInfos = scoreInfoMapper.getScoreListByPlayer(playerId);
         return scoreInfos;
+    }
+
+    /**
+     * 检查评委是否已经打分
+     * @param scoreInfo
+     * @return
+     */
+    @RequestMapping("/checkScoreByJudgeId")
+    public Map<String,String> checkScoreByJudgeId(ScoreInfo scoreInfo){
+        Map<String, String> param = new HashMap<>();
+        String checkFlag = "failed";
+        List<ScoreInfo> scoreList = scoreInfoMapper.getScoreList(scoreInfo);
+        if (scoreList != null && scoreList.size() > 0){
+            checkFlag = "success";
+        }
+        param.put("flag", checkFlag);
+        return param;
     }
 
     /**

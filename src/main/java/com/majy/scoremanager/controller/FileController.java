@@ -29,11 +29,11 @@ public class FileController {
     public Map<String,String> handleFileUpload(@RequestParam("file")MultipartFile file, @RequestParam("gameId") String gameId){
         Map<String,String> param = new HashMap<>();
         String flag = "failed";
-        String message = "上传失败";
+        String message = "上传失败，请检查图片大小或稍后重试。";
         if(!file.isEmpty()){
             //文件存储路径
-            //String filePath = "/Library/apache-tomcat-7.0.70/webapps/scoremanager_ui/static/"+gameId+"/";
-            String filePath = "/usr/local/tomcat/tomcat2/webapps/scoremanager_ui/static/"+gameId+"/";
+            String filePath = "/Library/apache-tomcat-7.0.70/webapps/scoremanager_ui/static/"+gameId+"/";
+            //String filePath = "/usr/local/tomcat/tomcat2/webapps/scoremanager_ui/static/"+gameId+"/";
 
             // 获取文件的后缀名
             String fileName = file.getOriginalFilename();

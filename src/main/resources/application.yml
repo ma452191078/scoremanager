@@ -10,6 +10,10 @@ spring:
     encoding: utf-8
   jmx:
     default-domain: ScoremanagerApplication
+  http:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
 
 
 mybatis:

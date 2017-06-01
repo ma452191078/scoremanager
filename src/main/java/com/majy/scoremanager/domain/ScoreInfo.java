@@ -16,6 +16,7 @@ public class ScoreInfo {
     private String addTime;
     //排序标志
     private String orderFlag;
+    private String judgeId;
 
     public String getScoreId() {
         return scoreId;
@@ -63,5 +64,13 @@ public class ScoreInfo {
 
     public void setOrderFlag(String orderFlag) {
         this.orderFlag = orderFlag;
+    }
+
+    public String getJudgeId() {
+        return judgeId;
+    }
+
+    public void setJudgeId(String judgeId) {
+        this.judgeId = judgeId;
     }
 }

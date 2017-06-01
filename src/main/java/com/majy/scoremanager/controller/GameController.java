@@ -122,4 +122,25 @@ public class GameController {
         return param;
     }
 
+    /**
+     * 获取评委id
+     * @param gameId 比赛id
+     * @return 查询结果
+     */
+    @RequestMapping("/getGameJudgeId")
+    public Map<String, String> getGameJudgeId(@RequestParam("gameId") String gameId){
+        Map<String, String> param = new HashMap<>();
+        String getFlag = "failed";
+        GameInfo gameInfo;
+        String judgeId = "";
+        gameInfo = gameInfoMapper.getGameInfoById(gameId);
+        if (gameInfo != null){
+            judgeId = UUID.randomUUID().toString();
+            getFlag = "success";
+        }
+        param.put("flag", getFlag);
+        param.put("judgeId", judgeId);
+        return param;
+    }
+
 }

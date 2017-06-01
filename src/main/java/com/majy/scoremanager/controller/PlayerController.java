@@ -88,14 +88,23 @@ public class PlayerController {
 
         if (playerInfo != null && playerInfo.getPlayerName() != null
                 && !"".equals(playerInfo.getPlayerName())){
-            playerInfo.setPlayerId(UUID.randomUUID().toString());
-            int result = playerInfoMapper.insert(playerInfo);
-            if (result > 0){
-                addFlag = "success";
-                addMessage = "选手" + playerInfo.getPlayerName() + "创建成功。";
-                param.put("playerInfo", playerInfo);
+            //检查序号是否存在
+            PlayerInfo searchInfo = new PlayerInfo();
+            searchInfo.setGameId(playerInfo.getGameId());
+            searchInfo.setPlayerNum(playerInfo.getPlayerNum());
+            List<PlayerInfo> searchList = playerInfoMapper.getPlayerList(searchInfo);
+            if (searchList != null && searchList.size() > 0){
+                addMessage = "出场顺序重复，请重新填写出厂顺序。";
+            }else {
+                //无重复出场顺序执行下一步操作
+                playerInfo.setPlayerId(UUID.randomUUID().toString());
+                int result = playerInfoMapper.insert(playerInfo);
+                if (result > 0){
+                    addFlag = "success";
+                    addMessage = "选手" + playerInfo.getPlayerName() + "创建成功。";
+                    param.put("playerInfo", playerInfo);
+                }
             }
-
         }
 
         param.put("flag", addFlag);
@@ -138,23 +147,26 @@ public class PlayerController {
         Map<String, String> param = new HashMap<>();
         String addFlag = "failed";
         String addMessage = "评分终止失败，请稍后重试。";
+        BigDecimal sumScore = new BigDecimal(0.00); //总得分
+        BigDecimal avgScore = new BigDecimal(0.00); //平均分
 
         if (playerId != null && !"".equals(playerId)){
             //选手得分计算方法待完善
             List<ScoreInfo> scoreInfos = scoreInfoMapper.getScoreListByPlayer(playerId);
-            if (scoreInfos.size() > 2) {
-                scoreInfos.remove(0);   //去除最低分
-                scoreInfos.remove(scoreInfos.size() - 1); //去掉最高分
-            }
-            BigDecimal sumScore = new BigDecimal(0.00); //总得分
-            BigDecimal avgScore; //平均分
-            //求得总分
-            for (ScoreInfo item : scoreInfos){
-                sumScore = sumScore.add(item.getScoreValue());
-            }
-            //计算平均分
-            avgScore = sumScore.divide(new BigDecimal(scoreInfos.size()),2,BigDecimal.ROUND_HALF_UP);
+            if (scoreInfos != null && scoreInfos.size() > 0){
+                if (scoreInfos.size() > 2) {
+                    scoreInfos.remove(0);   //去除最低分
+                    scoreInfos.remove(scoreInfos.size() - 1); //去掉最高分
+                }
 
+                //求得总分
+                for (ScoreInfo item : scoreInfos){
+                    sumScore = sumScore.add(item.getScoreValue());
+                }
+                //计算平均分
+                avgScore = sumScore.divide(new BigDecimal(scoreInfos.size()),2,BigDecimal.ROUND_HALF_UP);
+
+            }
             //选手状态变更
             PlayerInfo playerInfo = new PlayerInfo();
             playerInfo.setPlayerId(playerId);
@@ -175,6 +187,7 @@ public class PlayerController {
                 addFlag = "success";
                 addMessage = "选手" + playerInfo.getPlayerName() + "评分已终止。";
             }
+
         }
 
         param.put("flag", addFlag);
