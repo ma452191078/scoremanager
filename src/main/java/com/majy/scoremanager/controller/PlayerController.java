@@ -94,7 +94,7 @@ public class PlayerController {
             searchInfo.setPlayerNum(playerInfo.getPlayerNum());
             List<PlayerInfo> searchList = playerInfoMapper.getPlayerList(searchInfo);
             if (searchList != null && searchList.size() > 0){
-                addMessage = "出场顺序重复，请重新填写出厂顺序。";
+                addMessage = "出场顺序重复，请重新填写出场顺序。";
             }else {
                 //无重复出场顺序执行下一步操作
                 playerInfo.setPlayerId(UUID.randomUUID().toString());
