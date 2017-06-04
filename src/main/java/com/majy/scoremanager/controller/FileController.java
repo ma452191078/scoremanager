@@ -1,5 +1,7 @@
 package com.majy.scoremanager.controller;
 
+import com.majy.scoremanager.properties.ScoreProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +21,8 @@ import java.util.UUID;
 @RequestMapping("/file")
 public class FileController {
 
+    @Autowired
+    private ScoreProperties properties;
     /**
      * 文件上传具体实现方法;
      * @param file
@@ -32,8 +36,7 @@ public class FileController {
         String message = "上传失败，请检查图片大小或稍后重试。";
         if(!file.isEmpty()){
             //文件存储路径
-            //String filePath = "/Library/apache-tomcat-7.0.70/webapps/scoremanager_ui/static/"+gameId+"/";
-            String filePath = "/usr/local/tomcat/tomcat2/webapps/scoremanager_ui/static/"+gameId+"/";
+            String filePath = properties.getImgPath() + properties.getImgDictory() + gameId+"/";
 
             // 获取文件的后缀名
             String fileName = file.getOriginalFilename();
@@ -49,7 +52,7 @@ public class FileController {
                 file.transferTo(dest);
                 flag = "success";
                 message = "上传成功";
-                param.put("filePath","/static/"+gameId+"/"+fileName);
+                param.put("filePath","/" + properties.getImgDictory()+gameId+"/"+fileName);
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             } catch (IOException e) {

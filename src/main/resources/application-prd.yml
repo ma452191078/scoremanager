@@ -15,3 +15,7 @@ spring:
         num-tests-per-eviction-run: 30
 
 
+#自定义配置参数
+myscore:
+  imgPath: /usr/local/tomcat/tomcat2/webapps/scoremanager_ui/
+  imgDictory: static/

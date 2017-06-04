@@ -25,3 +25,5 @@ server:
   tomcat:
     accesslog:
       enabled: true
+
+
