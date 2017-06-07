@@ -10,8 +10,15 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "myscore")
 public class ScoreProperties {
+    //图片保存路径
     private String imgPath;
+    //图片存储目录
     private String imgDictory;
+    //微信企业号相关
+    private String CorpID;
+    private String Secret;
+    //token有效时间
+    private long expiresIn;
 
     public String getImgPath() {
         return imgPath;
@@ -27,5 +34,29 @@ public class ScoreProperties {
 
     public void setImgDictory(String imgDictory) {
         this.imgDictory = imgDictory;
+    }
+
+    public String getCorpID() {
+        return CorpID;
+    }
+
+    public void setCorpID(String corpID) {
+        CorpID = corpID;
+    }
+
+    public String getSecret() {
+        return Secret;
+    }
+
+    public void setSecret(String secret) {
+        Secret = secret;
+    }
+
+    public long getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(long expiresIn) {
+        this.expiresIn = expiresIn;
     }
 }

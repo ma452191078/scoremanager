@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.majy.scoremanager.mapper.WechatInfoMapperr" >
+    <resultMap id="BaseResultMap" type="com.majy.scoremanager.domain.WechatInfo" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="accessToken" property="accessToken" jdbcType="VARCHAR" />
+        <result column="expiresIn" property="expiresIn" jdbcType="INTEGER" />
+        <result column="addTime" property="addTime" jdbcType="INTEGER" />
+    </resultMap>
+
+    <select id="getWechatInfo" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        SELECT
+        *
+        FROM wechatinfo
+    </select>
+
+    <insert id="insert" parameterType="com.majy.scoremanager.domain.WechatInfo" >
+        INSERT INTO
+        wechatinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accessToken != null and accessToken != '' ">
+                accessToken,
+            </if>
+            <if test="expiresIn != null and expiresIn != '' ">
+                expiresIn,
+            </if>
+            <if test="addTime != null and addTime != '' ">
+                addTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accessToken != null and accessToken != '' ">
+                #{scoreaccessTokenId},
+            </if>
+            <if test="expiresIn != null and expiresIn != '' ">
+                #{expiresIn},
+            </if>
+            <if test="addTime != null and addTime != '' ">
+                #{addTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.majy.scoremanager.domain.WechatInfo" >
+        UPDATE
+        wechatinfo
+        <set>
+        <if test="accessToken != null accessToken != ''">accessToken = #{accessToken},</if>
+        <if test="expiresIn != null and expiresIn != ''">expiresIn = #{expiresIn},</if>
+        <if test="addTime != null addTime != ''">addTime = #{addTime},</if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+
+</mapper>

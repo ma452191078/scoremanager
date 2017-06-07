@@ -12,5 +12,7 @@ spring:
 myscore:
   imgPath: /Library/apache-tomcat-7.0.70/webapps/scoremanager_ui/
   imgDictory: static/
+  CorpID: wxe83ec6aeca12528c
+  Secret: jWmWAd0KUteFqiCYhRtXFIJNl6goDl6AzXKsq3fMx4SNmIk4S6YEqO2EtFsk6aHN
 
 

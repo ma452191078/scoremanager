@@ -1,7 +1,10 @@
 package com.majy.scoremanager.controller;
 
 import com.majy.scoremanager.domain.GameInfo;
+import com.majy.scoremanager.domain.WechatInfo;
 import com.majy.scoremanager.mapper.GameInfoMapper;
+import com.majy.scoremanager.mapper.WechatInfoMapper;
+import com.majy.scoremanager.util.WeChatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +24,8 @@ public class GameController {
 
     @Autowired
     private GameInfoMapper gameInfoMapper;
+    @Autowired
+    private WechatInfoMapper wechatInfoMapper;
 
     @RequestMapping("/getGameList")
     public Map<String,Object> getGameList(GameInfo gameInfo){
@@ -128,18 +133,48 @@ public class GameController {
      * @return 查询结果
      */
     @RequestMapping("/getGameJudgeId")
-    public Map<String, String> getGameJudgeId(@RequestParam("gameId") String gameId){
+    public Map<String, String> getGameJudgeId(@RequestParam("gameId") String gameId,
+                                              @RequestParam("code") String code){
         Map<String, String> param = new HashMap<>();
         String getFlag = "failed";
         GameInfo gameInfo;
         String judgeId = "";
+        String userName = null;
         gameInfo = gameInfoMapper.getGameInfoById(gameId);
         if (gameInfo != null){
+            String accessToken = null;
+            WechatInfo wechatInfo = wechatInfoMapper.getWechatInfo();
+            if (wechatInfo != null){
+                accessToken = wechatInfo.getAccessToken();
+                Date now = new Date();
+                if (now.getTime() - wechatInfo.getAddTime() > 7200){
+                    accessToken = null;
+                }
+            }
+            if (accessToken == null || "".equals(accessToken)){
+                WeChatUtil weChatUtil = new WeChatUtil();
+                accessToken = weChatUtil.getAccessToken();
+                if (!"".equals(accessToken)){
+                    wechatInfo.setAccessToken(accessToken);
+                    wechatInfo.setAddTime(new Date().getTime());
+                    if (wechatInfo.getId() > 0){
+                        wechatInfoMapper.update(wechatInfo);
+                    }else {
+                        wechatInfoMapper.insert(wechatInfo);
+                    }
+                    String userTicket = weChatUtil.getUserTicket(accessToken,code);
+                    if (!"".equals(userTicket)){
+                        userName = weChatUtil.getGetUserName(accessToken,userTicket);
+                    }
+                }
+            }
+
             judgeId = UUID.randomUUID().toString();
             getFlag = "success";
         }
         param.put("flag", getFlag);
         param.put("judgeId", judgeId);
+        param.put("userName", userName);
         return param;
     }
 
