@@ -12,6 +12,7 @@
         <result column="gameDeleted" property="gameDeleted" jdbcType="VARCHAR" />
         <result column="gameQr" property="gameQr" jdbcType="VARCHAR" />
         <result column="gameUrl" property="gameUrl" jdbcType="VARCHAR" />
+        <result column="gameRole" property="gameRole" jdbcType="VARCHAR" />
 
     </resultMap>
 
@@ -94,6 +95,9 @@
             <if test="gameUrl != null and gameUrl != '' ">
                 gameUrl,
             </if>
+            <if test="gameRole != null and gameRole != '' ">
+                gameRole,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="gameId != null and gameId != '' ">
@@ -126,6 +130,9 @@
             <if test="gameUrl != null and gameUrl != '' ">
                 #{gameUrl},
             </if>
+            <if test="gameRole != null and gameRole != '' ">
+                #{gameRole},
+            </if>
         </trim>
     </insert>
 
@@ -140,6 +147,7 @@
             <if test="gameOwner != null and gameOwner != ''">gameOwner = #{gameOwner},</if>
             <if test="gameDeleted != null and gameDeleted != ''">gameDeleted = #{gameDeleted},</if>
             <if test="gameActive != null and gameActive != ''">gameActive = #{gameActive},</if>
+            <if test="gameRole != null and gameRole != ''">gameRole = #{gameRole},</if>
         </set>
         WHERE
         gameId = #{gameId}

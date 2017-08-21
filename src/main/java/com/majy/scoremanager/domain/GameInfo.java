@@ -21,9 +21,8 @@ public class GameInfo {
     private String gameUrl;
     private String gameRole;
 
-    public String getGameId() {
-        return gameId;
-    }
+    public GameInfo(){
 
+    }
 
 }
