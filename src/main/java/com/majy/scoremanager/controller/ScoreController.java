@@ -3,9 +3,11 @@ package com.majy.scoremanager.controller;
 import com.majy.scoremanager.domain.GameInfo;
 import com.majy.scoremanager.domain.PlayerInfo;
 import com.majy.scoremanager.domain.ScoreInfo;
+import com.majy.scoremanager.domain.ScoreRoleInfo;
 import com.majy.scoremanager.mapper.GameInfoMapper;
 import com.majy.scoremanager.mapper.PlayerInfoMapper;
 import com.majy.scoremanager.mapper.ScoreInfoMapper;
+import com.majy.scoremanager.mapper.ScoreRoleInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +31,8 @@ public class ScoreController {
     private PlayerInfoMapper playerInfoMapper;
     @Autowired
     private GameInfoMapper gameInfoMapper;
+    @Autowired
+    private ScoreRoleInfoMapper scoreRoleInfoMapper;
 
     @RequestMapping("/getScoreListByPlayer")
     public List<ScoreInfo> getScoreListByPlayer(String playerId){
@@ -72,6 +76,15 @@ public class ScoreController {
             if ("0".equals(gameInfo.getGameActive())){
                 PlayerInfo playerInfo = playerInfoMapper.getPlayerInfoById(scoreInfo.getPlayerId());
                 if ("0".equals(playerInfo.getPlayerActive())){
+                    //创建评分明细
+                    if (scoreInfo.getScoreRoleInfoList() != null && scoreInfo.getScoreRoleInfoList().size() > 0){
+
+                        for (ScoreRoleInfo scoreRoleInfo : scoreInfo.getScoreRoleInfoList()) {
+                            scoreRoleInfo.setScoreId(UUID.randomUUID().toString());
+                            scoreRoleInfoMapper.insert(scoreRoleInfo);
+                        }
+                    }
+                    //创建总分
                     scoreInfo.setScoreId(UUID.randomUUID().toString());
                     int result = scoreInfoMapper.insert(scoreInfo);
                     if (result > 0){

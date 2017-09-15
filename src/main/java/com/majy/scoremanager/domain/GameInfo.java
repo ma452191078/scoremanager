@@ -2,6 +2,9 @@ package com.majy.scoremanager.domain;
 
 import lombok.Data;
 
+import java.util.List;
+
+
 /**
  * Created by majingyuan on 2017/5/28.
  * 比赛类
@@ -20,6 +23,7 @@ public class GameInfo {
     private String gameQr;
     private String gameUrl;
     private String gameRole;
+    private List<GameRoleInfo> gameRoleInfoList;
 
     public GameInfo(){
 

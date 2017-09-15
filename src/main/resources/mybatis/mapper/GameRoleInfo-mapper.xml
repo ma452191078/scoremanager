@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.majy.scoremanager.mapper.GameRoleInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.majy.scoremanager.domain.GameRoleInfo" >
+        <id column="roleId" property="roleId" jdbcType="VARCHAR" />
+        <result column="roleIndex" property="roleIndex" jdbcType="INTEGER" />
+        <result column="roleName" property="roleName" jdbcType="VARCHAR" />
+        <result column="roleScore" property="roleScore" jdbcType="DECIMAL" />
+        <result column="gameId" property="gameId" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getAll" resultType="list" resultMap="BaseResultMap"  >
+        SELECT
+        *
+        FROM gameroleinfo
+    </select>
+
+    <select id="getGameRoleList" parameterType="com.majy.scoremanager.domain.GameRoleInfo" resultType="list" resultMap="BaseResultMap"  >
+        SELECT
+        *
+        FROM gameroleinfo
+        <where>
+            <if test="roleId != null and roleId != '' ">
+                and roleId = #{roleId}
+            </if>
+            <if test="roleIndex != null and roleIndex != '' ">
+                and roleIndex = #{roleIndex}
+            </if>
+            <if test="roleName != null and roleName != '' ">
+                and roleName = #{roleName}
+            </if>
+            <if test="gameId != null and gameId != '' ">
+                and gameId = #{gameId}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="getGameRoleListByGame" parameterType="java.lang.String" resultType="list" resultMap="BaseResultMap" >
+        SELECT
+        *
+        FROM gameroleinfo
+        WHERE gameId = #{gameId}
+        ORDER BY roleIndex
+    </select>
+
+
+    <select id="getGameRoleInfoById" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        SELECT
+        *
+        FROM GameRoleInfo
+        WHERE roleId = #{roleId}
+    </select>
+
+    <insert id="insert" parameterType="com.majy.scoremanager.domain.GameRoleInfo" >
+        INSERT INTO
+        gameroleinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleId != null and roleId != '' ">
+                roleId,
+            </if>
+            <if test="roleIndex != null and roleIndex != '' ">
+                roleIndex,
+            </if>
+            <if test="roleName != null and roleName != '' ">
+                roleName,
+            </if>
+            <if test="roleScore != null and roleScore != '' ">
+                roleScore,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleId != null and roleId != '' ">
+                #{roleId},
+            </if>
+            <if test="roleIndex != null and roleIndex != '' ">
+                #{roleIndex},
+            </if>
+            <if test="roleName != null and roleName != '' ">
+                #{roleName},
+            </if>
+            <if test="roleScore != null and roleScore != '' ">
+                #{roleScore},
+            </if>
+
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.majy.scoremanager.domain.GameRoleInfo" >
+        UPDATE
+        gameroleinfo
+        <set>
+        <if test="roleName != null roleName != ''">roleName = #{roleName},</if>
+        <if test="roleScore != null and roleScore != ''">roleScore = #{roleScore},</if>
+        <if test="gameId != null gameId != ''">gameId = #{gameId},</if>
+        <if test="roleIndex != null roleIndex != ''">roleIndex = #{roleIndex},</if>
+        </set>
+        WHERE
+        roleId = #{roleId}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String" >
+        DELETE FROM
+        gameroleinfo
+        WHERE
+        roleId =#{roleId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.majy.scoremanager.mapper.ScoreRoleInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.majy.scoremanager.domain.ScoreRoleInfo" >
+        <id column="scoreId" property="scoreId" jdbcType="VARCHAR" />
+        <result column="scoreValue" property="scoreValue" jdbcType="DECIMAL" />
+        <result column="roleId" property="roleId" jdbcType="VARCHAR" />
+        <result column="playerId" property="playerId" jdbcType="VARCHAR" />
+        <result column="judgeId" property="judgeId" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getAll" resultType="list" resultMap="BaseResultMap"  >
+        SELECT
+        *
+        FROM scoreroleinfo
+    </select>
+
+    <select id="getScoreRoleList" parameterType="com.majy.scoremanager.domain.ScoreRoleInfo" resultType="list" resultMap="BaseResultMap"  >
+        SELECT
+        *
+        FROM scoreroleinfo
+        <where>
+            <if test="scoreId != null and scoreId != '' ">
+                and scoreId = #{scoreId}
+            </if>
+            <if test="roleId != null and roleId != '' ">
+                and roleId = #{roleId}
+            </if>
+            <if test="playerId != null and playerId != '' ">
+                and playerId = #{playerId}
+            </if>
+            <if test="judgeId != null and judgeId != '' ">
+                and judgeId = #{judgeId}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="getScoreRoleListByPlayer" parameterType="java.lang.String" resultType="list" resultMap="BaseResultMap" >
+        SELECT
+        *
+        FROM scoreroleinfo
+        WHERE playerId = #{playerId}
+        ORDER BY scoreValue
+    </select>
+
+
+    <select id="getScoreRoleInfoById" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        SELECT
+        *
+        FROM scoreroleinfo
+        WHERE scoreId = #{scoreId}
+    </select>
+
+    <insert id="insert" parameterType="com.majy.scoremanager.domain.ScoreRoleInfo" >
+        INSERT INTO
+        scoreroleinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scoreId != null and scoreId != '' ">
+                scoreId,
+            </if>
+            <if test="scoreValue != null and scoreValue != '' ">
+                scoreValue,
+            </if>
+            <if test="roleId != null and roleId != '' ">
+                roleId,
+            </if>
+            <if test="playerId != null and playerId != '' ">
+                playerId,
+            </if>
+            <if test="judgeId != null and judgeId != '' ">
+                judgeId,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scoreId != null and scoreId != '' ">
+                #{scoreId},
+            </if>
+            <if test="scoreValue != null and scoreValue != '' ">
+                #{scoreValue},
+            </if>
+            <if test="roleId != null and roleId != '' ">
+                #{roleId},
+            </if>
+            <if test="playerId != null and playerId != '' ">
+                #{playerId},
+            </if>
+            <if test="judgeId != null and judgeId != '' ">
+                #{judgeId},
+            </if>
+
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.majy.scoremanager.domain.ScoreRoleInfo" >
+        UPDATE
+        scoreroleinfo
+        <set>
+        <if test="scoreValue != null scoreValue != ''">scoreValue = #{scoreValue},</if>
+        <if test="roleId != null and roleId != ''">roleId = #{roleId},</if>
+        <if test="playerId != null playerId != ''">playerId = #{playerId},</if>
+        </set>
+        WHERE
+        scoreId = #{scoreId}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String" >
+        DELETE FROM
+        scoreroleinfo
+        WHERE
+        scoreId =#{scoreId}
+    </delete>
+
+</mapper>

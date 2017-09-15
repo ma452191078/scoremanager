@@ -4,6 +4,7 @@ package com.majy.scoremanager.domain;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by majingyuan on 2017/5/28.
@@ -19,6 +20,7 @@ public class ScoreInfo {
     //排序标志
     private String orderFlag;
     private String judgeId;
+    private List<ScoreRoleInfo> scoreRoleInfoList;
 
     public ScoreInfo(){
 
