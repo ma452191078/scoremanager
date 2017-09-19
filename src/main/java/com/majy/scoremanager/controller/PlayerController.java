@@ -1,9 +1,11 @@
 package com.majy.scoremanager.controller;
 
 import com.majy.scoremanager.domain.GameInfo;
+import com.majy.scoremanager.domain.GameRoleInfo;
 import com.majy.scoremanager.domain.PlayerInfo;
 import com.majy.scoremanager.domain.ScoreInfo;
 import com.majy.scoremanager.mapper.GameInfoMapper;
+import com.majy.scoremanager.mapper.GameRoleInfoMapper;
 import com.majy.scoremanager.mapper.PlayerInfoMapper;
 import com.majy.scoremanager.mapper.ScoreInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class PlayerController {
     private ScoreInfoMapper scoreInfoMapper;
     @Autowired
     private GameInfoMapper gameInfoMapper;
+    @Autowired
+    private GameRoleInfoMapper gameRoleInfoMapper;
 
     /**
      * 多维度选手信息查询
@@ -54,6 +58,12 @@ public class PlayerController {
         if (gameId != null && !"".equals(gameId)){
             gameInfo = gameInfoMapper.getGameInfoById(gameId);
             playerInfos = playerInfoMapper.getPlayerListByGameId(gameId);
+
+            List<GameRoleInfo> result = gameRoleInfoMapper.getGameRoleListByGame(gameId);
+            if (result != null && result.size() > 0){
+                gameInfo.setGameRoleInfoList(result);
+            }
+
         }
         param.put("gameInfo", gameInfo);
         param.put("playerList", playerInfos);

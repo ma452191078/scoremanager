@@ -5,6 +5,7 @@ import com.majy.scoremanager.domain.GameRoleInfo;
 import com.majy.scoremanager.mapper.GameInfoMapper;
 import com.majy.scoremanager.mapper.GameRoleInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ public class GameController {
 
     @Autowired
     private GameInfoMapper gameInfoMapper;
+    @Autowired
     private GameRoleInfoMapper gameRoleInfoMapper;
 
     @RequestMapping("/getGameList")
@@ -33,6 +35,7 @@ public class GameController {
         List<GameInfo> gameInfoList = gameInfoMapper.getGameList(gameInfo);
         if (gameInfoList != null && gameInfoList.size() > 0){
             for (int i = 0; i < gameInfoList.size(); i ++){
+
                 switch (gameInfoList.get(i).getGameActive()){
                     case "0":
                         gameInfoList.get(i).setGameStatus("进行中");
@@ -42,6 +45,10 @@ public class GameController {
                         break;
                     default:
                         break;
+                }
+                List<GameRoleInfo> result = gameRoleInfoMapper.getGameRoleListByGame(gameInfoList.get(i).getGameId());
+                if (result != null && result.size() > 0){
+                    gameInfoList.get(i).setGameRoleInfoList(result);
                 }
             }
         }
@@ -57,6 +64,7 @@ public class GameController {
     @RequestMapping("/getGameInfoById")
     public GameInfo getGameInfoById(@RequestParam("gameId") String gameId){
         GameInfo gameInfo = gameInfoMapper.getGameInfoById(gameId);
+        gameInfo.setGameRoleInfoList(gameRoleInfoMapper.getGameRoleListByGame(gameInfo.getGameId()));
         return gameInfo;
     }
 
@@ -66,7 +74,7 @@ public class GameController {
      * @return
      */
     @RequestMapping("/updateGameInfo")
-    public Map<String, String> updateGameInfo(GameInfo gameInfo){
+    public Map<String, String> updateGameInfo(@RequestBody GameInfo gameInfo){
         Map<String, String> param = new HashMap<>();
         String addFlag = "failed";
         String addMessage = "修改失败请稍后重试。";
@@ -157,23 +165,18 @@ public class GameController {
      */
     private void createGameRole(GameInfo gameInfo){
         //TODO 创建比赛评分规则功能
-
+        gameRoleInfoMapper.deleteAllByGame(gameInfo.getGameId());
         List<GameRoleInfo> roleInfoList = gameInfo.getGameRoleInfoList();
         if (roleInfoList != null && roleInfoList.size() > 0){
-            if (gameInfo.getGameId() != null && !"".equals(gameInfo.getGameId())){
-                //更新规则
-                for (GameRoleInfo gameRoleInfo : roleInfoList){
-                    gameRoleInfoMapper.update(gameRoleInfo);
-                }
-            }else {
-                //新增规则
-                for (GameRoleInfo gameRoleInfo : roleInfoList){
-                    gameRoleInfo.setRoleId(UUID.randomUUID().toString());
-                    gameRoleInfo.setGameId(gameInfo.getGameId());
-                    gameRoleInfoMapper.insert(gameRoleInfo);
-                }
+            //新增规则
+            int i = 0;
+            for (GameRoleInfo gameRoleInfo : roleInfoList){
+                gameRoleInfo.setRoleIndex(i);
+                gameRoleInfo.setRoleId(UUID.randomUUID().toString());
+                gameRoleInfo.setGameId(gameInfo.getGameId());
+                gameRoleInfoMapper.insert(gameRoleInfo);
+                i ++ ;
             }
-
         }
     }
 }

@@ -24,4 +24,6 @@ public interface GameRoleInfoMapper {
     int update(GameRoleInfo gameInfo);
 
     int delete(String roleId);
+
+    int deleteAllByGame(String gameId);
 }

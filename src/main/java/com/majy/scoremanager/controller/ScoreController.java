@@ -9,9 +9,11 @@ import com.majy.scoremanager.mapper.PlayerInfoMapper;
 import com.majy.scoremanager.mapper.ScoreInfoMapper;
 import com.majy.scoremanager.mapper.ScoreRoleInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,16 @@ public class ScoreController {
         List<ScoreInfo> scoreInfos = null;
         if (playerId != null && !"".equals(playerId))
             scoreInfos = scoreInfoMapper.getScoreListByPlayer(playerId);
+
+        if (scoreInfos != null && scoreInfos.size() > 0){
+            List<ScoreRoleInfo> scoreRoleInfoList = null;
+            for (int i = 0; i < scoreInfos.size(); i++) {
+                scoreRoleInfoList = scoreRoleInfoMapper.getScoreRoleListByPlayer(playerId);
+                if (scoreRoleInfoList != null && scoreRoleInfoList.size() > 0){
+                    scoreInfos.get(i).setScoreRoleInfoList(scoreRoleInfoList);
+                }
+            }
+        }
         return scoreInfos;
     }
 
@@ -65,13 +77,13 @@ public class ScoreController {
      * @return
      */
     @RequestMapping("/addScore")
-    public Map<String,String> addScore(ScoreInfo scoreInfo) {
+    public Map<String,String> addScore(@RequestBody ScoreInfo scoreInfo) {
 
         Map<String, String> param = new HashMap<>();
         String addFlag = "failed";
         String addMessage = "~~~~(>_<)~~~~评分提交失败了，麻烦您再重试一次吧。";
-
-        if (scoreInfo != null && scoreInfo.getScoreValue() != null){
+        BigDecimal tmpScoreValue = new BigDecimal(0);
+        if (scoreInfo != null && scoreInfo.getScoreRoleInfoList() != null && scoreInfo.getScoreRoleInfoList().size() > 0){
             GameInfo gameInfo = gameInfoMapper.getGameInfoById(scoreInfo.getGameId());
             if ("0".equals(gameInfo.getGameActive())){
                 PlayerInfo playerInfo = playerInfoMapper.getPlayerInfoById(scoreInfo.getPlayerId());
@@ -81,11 +93,15 @@ public class ScoreController {
 
                         for (ScoreRoleInfo scoreRoleInfo : scoreInfo.getScoreRoleInfoList()) {
                             scoreRoleInfo.setScoreId(UUID.randomUUID().toString());
+                            scoreRoleInfo.setPlayerId(scoreInfo.getPlayerId());
+                            scoreRoleInfo.setJudgeId(scoreInfo.getJudgeId());
                             scoreRoleInfoMapper.insert(scoreRoleInfo);
+                            tmpScoreValue = tmpScoreValue.add(scoreRoleInfo.getScoreValue());
                         }
                     }
                     //创建总分
                     scoreInfo.setScoreId(UUID.randomUUID().toString());
+                    scoreInfo.setScoreValue(tmpScoreValue);
                     int result = scoreInfoMapper.insert(scoreInfo);
                     if (result > 0){
                         addFlag = "success";
