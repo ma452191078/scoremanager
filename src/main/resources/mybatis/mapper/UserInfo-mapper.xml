@@ -5,7 +5,10 @@
         <id column="userId" property="userId" jdbcType="VARCHAR" />
         <result column="userName" property="userName" jdbcType="VARCHAR" />
         <result column="userPassword" property="userPassword" jdbcType="VARCHAR" />
-        <result column="userAccount" property="userAccount" jdbcType="VARCHAR" />
+        <result column="userDepartment" property="userDepartment" jdbcType="VARCHAR" />
+        <result column="userToken" property="userToken" jdbcType="VARCHAR" />
+        <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="activeFlag" property="activeFlag" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="getAll" resultType="list" resultMap="BaseResultMap"  >
@@ -21,19 +24,19 @@
         WHERE userId = #{userId}
     </select>
 
-    <select id="getUserInfoByAccount" parameterType="java.lang.String" resultMap="BaseResultMap" >
+    <select id="getUserInfoByToken" parameterType="java.lang.String" resultMap="BaseResultMap" >
         SELECT
         *
         FROM userinfo
-        WHERE userAccount = #{userAccount}
+        WHERE userToken = #{userToken}
     </select>
 
     <insert id="insert" parameterType="com.majy.scoremanager.domain.UserInfo" >
         INSERT INTO
         userinfo
-        (userId,userName,userPassword,userAccount)
+        (userId,userName,userPassword,userDepartment)
         VALUES
-        (#{userId}, #{userName}, #{userPassword}, #{userAccount})
+        (#{userId}, #{userName}, #{userPassword}, #{userDepartment})
     </insert>
 
     <update id="update" parameterType="com.majy.scoremanager.domain.UserInfo" >
@@ -42,6 +45,9 @@
         <set>
         <if test="userName != null and userName != ''">userName = #{userName},</if>
         <if test="userPassword != null and userPassword != ''">userPassword = #{userPassword},</if>
+        <if test="userDepartment != null and userDepartment != ''">userDepartment = #{userDepartment},</if>
+        <if test="userToken != null and userToken != ''">userToken = #{userToken},</if>
+        <if test="activeFlag != null and activeFlag != ''">activeFlag = #{activeFlag},</if>
         </set>
         WHERE
         userId = #{userId}

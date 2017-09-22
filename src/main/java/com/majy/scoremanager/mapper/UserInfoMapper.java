@@ -14,13 +14,13 @@ public interface UserInfoMapper {
 
     List<UserInfo> getAll();
 
-    UserInfo getgetUserInfoById(String userId);
+    UserInfo getUserInfoById(String userId);
 
-    UserInfo getUserInfoByAccount(String userAccount);
+    UserInfo getUserInfoByToken(String userAccount);
 
-    void insert(UserInfo user);
+    int insert(UserInfo user);
 
-    void update(UserInfo user);
+    int update(UserInfo user);
 
-    void delete(String userId);
+    int delete(String userId);
 }
