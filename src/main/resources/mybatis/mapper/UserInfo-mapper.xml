@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.majy.scoremanager.domain.UserInfo" >
         <id column="userId" property="userId" jdbcType="VARCHAR" />
         <result column="userName" property="userName" jdbcType="VARCHAR" />
+        <result column="userAccount" property="userAccount" jdbcType="VARCHAR" />
         <result column="userPassword" property="userPassword" jdbcType="VARCHAR" />
         <result column="userDepartment" property="userDepartment" jdbcType="VARCHAR" />
         <result column="userToken" property="userToken" jdbcType="VARCHAR" />
@@ -24,6 +25,13 @@
         WHERE userId = #{userId}
     </select>
 
+    <select id="getUserInfoByAccount" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        SELECT
+        *
+        FROM userinfo
+        WHERE userAccount = #{userAccount}
+    </select>
+
     <select id="getUserInfoByToken" parameterType="java.lang.String" resultMap="BaseResultMap" >
         SELECT
         *
@@ -34,9 +42,9 @@
     <insert id="insert" parameterType="com.majy.scoremanager.domain.UserInfo" >
         INSERT INTO
         userinfo
-        (userId,userName,userPassword,userDepartment)
+        (userId,userName,userAccount,userPassword,userDepartment)
         VALUES
-        (#{userId}, #{userName}, #{userPassword}, #{userDepartment})
+        (#{userId}, #{userName}, #{userAccount}, #{userPassword}, #{userDepartment})
     </insert>
 
     <update id="update" parameterType="com.majy.scoremanager.domain.UserInfo" >

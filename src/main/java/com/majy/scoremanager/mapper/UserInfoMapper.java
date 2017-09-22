@@ -16,7 +16,9 @@ public interface UserInfoMapper {
 
     UserInfo getUserInfoById(String userId);
 
-    UserInfo getUserInfoByToken(String userAccount);
+    UserInfo getUserInfoByAccount(String userAccount);
+
+    UserInfo getUserInfoByToken(String userToken);
 
     int insert(UserInfo user);
 
