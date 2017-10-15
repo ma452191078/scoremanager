@@ -25,10 +25,11 @@ public class UserContorller {
     private UserInfoMapper userInfoMapper;
 
     @RequestMapping("/getUserList")
-    public List<UserInfo> index(){
-
-        List<UserInfo> userInfos = userInfoMapper.getAll();
-        return userInfos;
+    public Map<String,Object> getUserList(){
+        Map<String,Object> param = new HashMap<>();
+        List<UserInfo> userList = userInfoMapper.getAll();
+        param.put("userList", userList);
+        return param;
     }
 
     @RequestMapping("/getUserInfoById")
@@ -59,14 +60,32 @@ public class UserContorller {
         if (userInfo.getUserId() == null || "".equals(userInfo.getUserId())){
             userInfo.setUserId(UUID.randomUUID().toString());
             userInfo.setActiveFlag(AppConstant.ACTIVE_FLAG_ACTIVE);
-            if (userInfoMapper.insert(userInfo) > 0)
+            if (userInfoMapper.insert(userInfo) > 0) {
                 dbFlag = AppConstant.DB_WRITE_SUCCESS;
+            }
         }else {
-            if (userInfoMapper.update(userInfo) > 0)
+            if (userInfoMapper.update(userInfo) > 0) {
                 dbFlag = AppConstant.DB_WRITE_SUCCESS;
+            }
         }
 
         resultMap.put("errFlag", String.valueOf(dbFlag));
         return  resultMap;
+    }
+
+    /**
+     * 检查用户是否为管理员
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/checkUserInfoById")
+    public String checkUserInfoById(@RequestParam("userId") String userId){
+
+        String isAdmin = "";
+        UserInfo userInfo = userInfoMapper.getUserInfoById(userId);
+        if (userInfo != null && "admin".equals(userInfo.getUserAccount())){
+            isAdmin = "<li ><a href='#' @click='userManager({})'>用户管理</a></li>";
+        }
+        return  isAdmin;
     }
 }

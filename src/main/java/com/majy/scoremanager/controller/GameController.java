@@ -30,8 +30,9 @@ public class GameController {
     @RequestMapping("/getGameList")
     public Map<String,Object> getGameList(GameInfo gameInfo){
         Map<String,Object> map = new HashMap<String, Object>();
-        if (gameInfo == null)
+        if (gameInfo == null) {
             gameInfo = new GameInfo();
+        }
         List<GameInfo> gameInfoList = gameInfoMapper.getGameList(gameInfo);
         if (gameInfoList != null && gameInfoList.size() > 0){
             for (int i = 0; i < gameInfoList.size(); i ++){

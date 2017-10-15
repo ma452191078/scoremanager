@@ -39,8 +39,9 @@ public class ScoreController {
     @RequestMapping("/getScoreListByPlayer")
     public List<ScoreInfo> getScoreListByPlayer(String playerId){
         List<ScoreInfo> scoreInfos = null;
-        if (playerId != null && !"".equals(playerId))
+        if (playerId != null && !"".equals(playerId)) {
             scoreInfos = scoreInfoMapper.getScoreListByPlayer(playerId);
+        }
 
         if (scoreInfos != null && scoreInfos.size() > 0){
             List<ScoreRoleInfo> scoreRoleInfoList = null;

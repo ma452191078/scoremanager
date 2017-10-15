@@ -18,7 +18,7 @@ public class UserInfo  implements Serializable {
     private String userPassword;
     private String userDepartment;
     private String userToken;
-    private Timestamp updateTime;
+//    private Timestamp updateTime;
     private String activeFlag;
 
 }

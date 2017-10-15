@@ -8,7 +8,7 @@
         <result column="userPassword" property="userPassword" jdbcType="VARCHAR" />
         <result column="userDepartment" property="userDepartment" jdbcType="VARCHAR" />
         <result column="userToken" property="userToken" jdbcType="VARCHAR" />
-        <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+        <!--<result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />-->
         <result column="activeFlag" property="activeFlag" jdbcType="VARCHAR" />
     </resultMap>
 
