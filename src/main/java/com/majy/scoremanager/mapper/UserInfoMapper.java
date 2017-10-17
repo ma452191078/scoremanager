@@ -20,6 +20,8 @@ public interface UserInfoMapper {
 
     UserInfo getUserInfoByToken(String userToken);
 
+    int changeUserPassword(UserInfo userInfo);
+
     int insert(UserInfo user);
 
     int update(UserInfo user);

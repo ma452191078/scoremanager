@@ -3,13 +3,11 @@ package com.majy.scoremanager.controller;
 import com.majy.scoremanager.constant.AppConstant;
 import com.majy.scoremanager.domain.UserInfo;
 import com.majy.scoremanager.mapper.UserInfoMapper;
-import com.majy.scoremanager.utils.CookieUtil;
+import com.majy.scoremanager.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -34,7 +32,8 @@ public class LoginController {
         if (loginUser != null && !"".equals(loginUser.getUserAccount())){
             if (!"".equals(loginUser.getUserPassword())){
                 UserInfo userInfo = userInfoMapper.getUserInfoByAccount(loginUser.getUserAccount());
-                if (userInfo != null && !"".equals(userInfo.getUserId())){
+                if (userInfo != null && !"".equals(userInfo.getUserId())
+                        && userInfo.getUserPassword().equals(MD5Util.encode(loginUser.getUserPassword()))){
                     UserInfo updateUser = new UserInfo();
                     updateUser.setUserId(userInfo.getUserId());
                     updateUser.setUserToken(UUID.randomUUID().toString());
@@ -44,7 +43,6 @@ public class LoginController {
                     resultMap.put("userName", userInfo.getUserName());
                     resultMap.put("userId", userInfo.getUserId());
                     resultMap.put("userToken", userInfo.getUserToken());
-//                    CookieUtil.set(response,"token",userInfo.getUserToken(), 7200);
 
                 }else {
                     errCode = AppConstant.REQUEST_ERROR;

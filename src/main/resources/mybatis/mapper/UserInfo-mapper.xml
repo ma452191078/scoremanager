@@ -61,6 +61,16 @@
         userId = #{userId}
     </update>
 
+    <update id="changeUserPassword" parameterType="com.majy.scoremanager.domain.UserInfo" >
+        UPDATE
+        userinfo
+        <set>
+            <if test="userPassword != null and userPassword != ''">userPassword = #{userPassword},</if>
+        </set>
+        WHERE
+        userId = #{userId}
+    </update>
+
     <delete id="delete" parameterType="java.lang.String" >
         DELETE FROM
         userinfo
