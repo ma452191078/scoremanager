@@ -58,6 +58,11 @@ public class LoginController {
         return resultMap;
     }
 
+    /**
+     * 检查用户token
+     * @param loginUser
+     * @return
+     */
     @RequestMapping("/checkToken")
     public Map<String, String> checkToken(UserInfo loginUser){
         Map<String, String> resultMap = new HashMap<>();

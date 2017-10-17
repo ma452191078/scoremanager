@@ -180,4 +180,26 @@ public class UserContorller {
 
         return resultMap;
     }
+
+    /**
+     * 重置密码
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/resetUserPassword")
+    public Map<String, String> resetUserPassword(@RequestParam("userId") String userId){
+        Map<String,String> resultMap = new HashMap<>();
+        String errMsg = AppConstant.REQUEST_ERROR_VALUE;
+        if (!"".equals(userId)){
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUserId(userId);
+            userInfo.setUserPassword(MD5Util.encode(AppConstant.DEFAULT_PASSWORD));
+            if (userInfoMapper.update(userInfo) > 0){
+                errMsg = AppConstant.REQUEST_SUCCESS_VALUE;
+            }
+        }
+        resultMap.put("errMsg", String.valueOf(errMsg));
+
+        return resultMap;
+    }
 }
