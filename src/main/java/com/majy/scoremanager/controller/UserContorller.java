@@ -115,7 +115,7 @@ public class UserContorller {
         if (userInfo != null && !"".equals(userInfo.getUserId())){
             UserInfo changeUser = userInfoMapper.getUserInfoById(userInfo.getUserId());
             if (changeUser != null){
-                if (changeUser.getUserPassword().equals(MD5Util.encode(userInfo.getUserPassword()))){
+                if (changeUser.getUserPassword().equals(MD5Util.encode(userInfo.getUserOldPassword()))){
                     changeUser.setUserPassword(MD5Util.encode(userInfo.getUserPassword()));
                     if (userInfoMapper.changeUserPassword(changeUser) > 0){
                         dbFlag = AppConstant.DB_WRITE_SUCCESS;
