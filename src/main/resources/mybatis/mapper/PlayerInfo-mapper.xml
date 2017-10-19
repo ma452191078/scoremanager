@@ -48,6 +48,9 @@
             <if test="playerActive != null and playerActive != '' ">
                 and playerActive = #{playerActive}
             </if>
+            <if test="playerAddBy != null and playerAddBy != '' ">
+                and playerAddBy = #{playerAddBy}
+            </if>
         </where>
         ORDER BY gameId,playerAverage DESC ,playerNum
     </select>

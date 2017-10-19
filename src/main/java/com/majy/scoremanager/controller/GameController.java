@@ -1,9 +1,12 @@
 package com.majy.scoremanager.controller;
 
+import com.majy.scoremanager.constant.AppConstant;
 import com.majy.scoremanager.domain.GameInfo;
 import com.majy.scoremanager.domain.GameRoleInfo;
+import com.majy.scoremanager.domain.UserInfo;
 import com.majy.scoremanager.mapper.GameInfoMapper;
 import com.majy.scoremanager.mapper.GameRoleInfoMapper;
+import com.majy.scoremanager.mapper.UserInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +29,8 @@ public class GameController {
     private GameInfoMapper gameInfoMapper;
     @Autowired
     private GameRoleInfoMapper gameRoleInfoMapper;
+    @Autowired
+    private UserInfoMapper userInfoMapper;
 
     @RequestMapping("/getGameList")
     public Map<String,Object> getGameList(GameInfo gameInfo){
@@ -33,6 +38,11 @@ public class GameController {
         if (gameInfo == null) {
             gameInfo = new GameInfo();
         }
+        UserInfo loginUser = userInfoMapper.getUserInfoById(gameInfo.getAddBy());
+        if (AppConstant.USER_ADMIN.equals(loginUser.getUserRole())){
+            gameInfo.setAddBy("");
+        }
+
         List<GameInfo> gameInfoList = gameInfoMapper.getGameList(gameInfo);
         if (gameInfoList != null && gameInfoList.size() > 0){
             for (int i = 0; i < gameInfoList.size(); i ++){

@@ -48,6 +48,9 @@
             <if test="gameDeleted != null and gameDeleted != '' ">
                 and gameDeleted = #{gameDeleted}
             </if>
+            <if test="addBy != null and addBy != '' ">
+                and addBy = #{addBy}
+            </if>
         </where>
     </select>
 
@@ -117,6 +120,9 @@
             </if>
             <if test="gameDeleted != null and gameDeleted != '' ">
                 #{gameDeleted},
+            </if>
+            <if test="addBy != null and addBy != '' ">
+                #{addBy},
             </if>
             <if test="gameOwner != null and gameOwner != '' ">
                 #{gameOwner},

@@ -21,4 +21,8 @@ public interface AppConstant {
     Integer DB_WRITE_FAILED = 0;
 
     String DEFAULT_PASSWORD = "123456";
+
+    //用户角色
+    String USER_ADMIN = "0";
+    String USER_MEDIUM = "1";
 }

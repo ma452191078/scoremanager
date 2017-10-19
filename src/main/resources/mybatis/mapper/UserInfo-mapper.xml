@@ -10,6 +10,7 @@
         <result column="userToken" property="userToken" jdbcType="VARCHAR" />
         <!--<result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />-->
         <result column="activeFlag" property="activeFlag" jdbcType="VARCHAR" />
+        <result column="userRole" property="userRole" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="getAll" resultType="list" resultMap="BaseResultMap"  >

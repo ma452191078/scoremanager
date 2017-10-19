@@ -1,13 +1,8 @@
 package com.majy.scoremanager.controller;
 
-import com.majy.scoremanager.domain.GameInfo;
-import com.majy.scoremanager.domain.GameRoleInfo;
-import com.majy.scoremanager.domain.PlayerInfo;
-import com.majy.scoremanager.domain.ScoreInfo;
-import com.majy.scoremanager.mapper.GameInfoMapper;
-import com.majy.scoremanager.mapper.GameRoleInfoMapper;
-import com.majy.scoremanager.mapper.PlayerInfoMapper;
-import com.majy.scoremanager.mapper.ScoreInfoMapper;
+import com.majy.scoremanager.constant.AppConstant;
+import com.majy.scoremanager.domain.*;
+import com.majy.scoremanager.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +27,8 @@ public class PlayerController {
     private GameInfoMapper gameInfoMapper;
     @Autowired
     private GameRoleInfoMapper gameRoleInfoMapper;
-
+    @Autowired
+    private UserInfoMapper userInfoMapper;
     /**
      * 多维度选手信息查询
      * @param playerInfo 参赛人信息作为查询条件
@@ -40,7 +36,10 @@ public class PlayerController {
      */
     @RequestMapping("getPlayerList")
     public List<PlayerInfo> getPlayerList(PlayerInfo playerInfo){
-
+        UserInfo loginUser = userInfoMapper.getUserInfoById(playerInfo.getPlayerAddBy());
+        if (AppConstant.USER_ADMIN.equals(loginUser.getUserRole())){
+            playerInfo.setPlayerAddBy("");
+        }
         List<PlayerInfo> playerInfos = playerInfoMapper.getPlayerList(playerInfo);
         return playerInfos;
     }
