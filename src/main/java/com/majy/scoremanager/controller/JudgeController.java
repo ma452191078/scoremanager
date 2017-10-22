@@ -64,11 +64,14 @@ public class JudgeController {
         Map<String,Object> map = new HashMap<String, Object>();
         int errFlag = AppConstant.DB_WRITE_FAILED;
         String errMsg = "信息创建失败，请重试";
-        judgeInfo.setJudgeId(UUID.randomUUID().toString());
-        if (judgeInfoMapper.insert(judgeInfo) > 0){
-            errFlag = AppConstant.DB_WRITE_SUCCESS;
-            errMsg = "创建成功";
+        if (judgeInfo != null){
+            judgeInfo.setJudgeId(UUID.randomUUID().toString());
+            if (judgeInfoMapper.insert(judgeInfo) > 0){
+                errFlag = AppConstant.DB_WRITE_SUCCESS;
+                errMsg = "创建成功";
+            }
         }
+
         map.put("judgeInfo", judgeInfo);
         map.put("errFlag", errFlag);
         map.put("errMsg", errMsg);

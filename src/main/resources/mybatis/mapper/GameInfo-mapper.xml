@@ -22,6 +22,7 @@
         SELECT
         *
         FROM gameinfo
+        ORDER BY startDate DESC
     </select>
 
     <select id="getGameList" parameterType="com.majy.scoremanager.domain.GameInfo" resultType="list" resultMap="BaseResultMap"  >
@@ -53,6 +54,7 @@
             <if test="addBy != null and addBy != '' ">
                 and addBy = #{addBy}
             </if>
+            ORDER BY startDate DESC
         </where>
     </select>
 

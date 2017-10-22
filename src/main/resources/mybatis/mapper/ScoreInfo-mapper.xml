@@ -111,11 +111,13 @@
         scoreId = #{scoreId}
     </update>
 
-    <delete id="delete" parameterType="java.lang.String" >
+    <delete id="delete" parameterType="com.majy.scoremanager.domain.ScoreInfo" >
         DELETE FROM
         scoreinfo
         WHERE
-        scoreId =#{scoreId}
+        gameId =#{gameId}
+        AND playerId = #{playerId}
+        AND judgeId = #{judgeId}
     </delete>
 
 </mapper>

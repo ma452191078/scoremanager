@@ -68,7 +68,7 @@ public class GameInfo {
     private String realNameFlag;
 
     /**
-     * 修改评分模式，0启用，1启用
+     * 修改评分模式，0启用，1不启用
      */
     private String changeScoreFlag;
 

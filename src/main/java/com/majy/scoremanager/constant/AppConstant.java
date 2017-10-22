@@ -29,6 +29,6 @@ public interface AppConstant {
     /**
      * 启用禁用标识
      */
-    String FLAG_ENABLE = "1";
-    String FLAG_DISABLE = "0";
+    String FLAG_ENABLE = "0";
+    String FLAG_DISABLE = "1";
 }

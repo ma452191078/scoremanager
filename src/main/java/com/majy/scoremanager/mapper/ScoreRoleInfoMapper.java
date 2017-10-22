@@ -23,5 +23,5 @@ public interface ScoreRoleInfoMapper {
 
     int update(ScoreRoleInfo scoreInfo);
 
-    int delete(String scoreId);
+    int delete(ScoreRoleInfo scoreInfo);
 }

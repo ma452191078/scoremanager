@@ -100,6 +100,12 @@ public class ScoreController {
                     //创建评分明细
                     if (scoreInfo.getScoreRoleInfoList() != null && scoreInfo.getScoreRoleInfoList().size() > 0){
 
+                        //删除原打分记录
+                        ScoreRoleInfo deleteInfo = new ScoreRoleInfo();
+                        deleteInfo.setJudgeId(scoreInfo.getJudgeId());
+                        deleteInfo.setPlayerId(scoreInfo.getPlayerId());
+                        scoreRoleInfoMapper.delete(deleteInfo);
+                        //=====================================
                         for (ScoreRoleInfo scoreRoleInfo : scoreInfo.getScoreRoleInfoList()) {
                             scoreRoleInfo.setScoreId(UUID.randomUUID().toString());
                             scoreRoleInfo.setPlayerId(scoreInfo.getPlayerId());
@@ -108,6 +114,12 @@ public class ScoreController {
                             tmpScoreValue = tmpScoreValue.add(scoreRoleInfo.getScoreValue());
                         }
                     }
+                    //删除原总分
+                    ScoreInfo deleteScore = new ScoreInfo();
+                    deleteScore.setJudgeId(scoreInfo.getJudgeId());
+                    deleteScore.setPlayerId(scoreInfo.getPlayerId());
+                    deleteScore.setGameId(scoreInfo.getGameId());
+                    scoreInfoMapper.delete(deleteScore);
                     //创建总分
                     scoreInfo.setScoreId(UUID.randomUUID().toString());
                     scoreInfo.setScoreValue(tmpScoreValue);
