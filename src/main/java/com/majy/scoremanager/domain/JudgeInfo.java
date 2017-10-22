@@ -8,7 +8,7 @@ import lombok.Data;
  * @Date Create in 2017/10/19 23:44
  */
 @Data
-public class JudegInfo {
+public class JudgeInfo {
     /**
      * 评委ID
      */
@@ -16,7 +16,7 @@ public class JudegInfo {
     /**
      * 评委姓名
      */
-    private String judegName;
+    private String judgeName;
     /**
      * 比赛ID
      */

@@ -13,6 +13,8 @@
         <result column="gameQr" property="gameQr" jdbcType="VARCHAR" />
         <result column="gameUrl" property="gameUrl" jdbcType="VARCHAR" />
         <result column="gameRole" property="gameRole" jdbcType="VARCHAR" />
+        <result column="realNameFlag" property="realNameFlag" jdbcType="VARCHAR" />
+        <result column="changeScoreFlag" property="changeScoreFlag" jdbcType="VARCHAR" />
 
     </resultMap>
 
@@ -101,6 +103,12 @@
             <if test="gameRole != null and gameRole != '' ">
                 gameRole,
             </if>
+            <if test="realNameFlag != null and realNameFlag != '' ">
+                realNameFlag,
+            </if>
+            <if test="changeScoreFlag != null and changeScoreFlag != '' ">
+                changeScoreFlag,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="gameId != null and gameId != '' ">
@@ -139,6 +147,12 @@
             <if test="gameRole != null and gameRole != '' ">
                 #{gameRole},
             </if>
+            <if test="realNameFlag != null and realNameFlag != '' ">
+                {realNameFlag},
+            </if>
+            <if test="changeScoreFlag != null and changeScoreFlag != '' ">
+                {changeScoreFlag},
+            </if>
         </trim>
     </insert>
 
@@ -154,6 +168,8 @@
             <if test="gameDeleted != null and gameDeleted != ''">gameDeleted = #{gameDeleted},</if>
             <if test="gameActive != null and gameActive != ''">gameActive = #{gameActive},</if>
             <if test="gameRole != null and gameRole != ''">gameRole = #{gameRole},</if>
+            <if test="realNameFlag != null and realNameFlag != ''">realNameFlag = #{realNameFlag},</if>
+            <if test="changeScoreFlag != null and changeScoreFlag != ''">changeScoreFlag = #{changeScoreFlag},</if>
         </set>
         WHERE
         gameId = #{gameId}

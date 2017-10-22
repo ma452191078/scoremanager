@@ -1,13 +1,11 @@
 package com.majy.scoremanager.controller;
 
+import com.majy.scoremanager.constant.AppConstant;
 import com.majy.scoremanager.domain.GameInfo;
 import com.majy.scoremanager.domain.PlayerInfo;
 import com.majy.scoremanager.domain.ScoreInfo;
 import com.majy.scoremanager.domain.ScoreRoleInfo;
-import com.majy.scoremanager.mapper.GameInfoMapper;
-import com.majy.scoremanager.mapper.PlayerInfoMapper;
-import com.majy.scoremanager.mapper.ScoreInfoMapper;
-import com.majy.scoremanager.mapper.ScoreRoleInfoMapper;
+import com.majy.scoremanager.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +33,8 @@ public class ScoreController {
     private GameInfoMapper gameInfoMapper;
     @Autowired
     private ScoreRoleInfoMapper scoreRoleInfoMapper;
+    @Autowired
+    private JudgeInfoMapper judgeInfoMapper;
 
     @RequestMapping("/getScoreListByPlayer")
     public List<ScoreInfo> getScoreListByPlayer(String playerId){
@@ -46,7 +46,11 @@ public class ScoreController {
         if (scoreInfos != null && scoreInfos.size() > 0){
             List<ScoreRoleInfo> scoreRoleInfoList = null;
             for (int i = 0; i < scoreInfos.size(); i++) {
-                scoreRoleInfoList = scoreRoleInfoMapper.getScoreRoleListByPlayer(playerId);
+                scoreInfos.get(i).setJudgeName(judgeInfoMapper.getJudgeInfoById(scoreInfos.get(i).getJudgeId()).getJudgeName());
+                ScoreRoleInfo searchInfo = new ScoreRoleInfo();
+                searchInfo.setPlayerId(scoreInfos.get(i).getPlayerId());
+                searchInfo.setJudgeId(scoreInfos.get(i).getJudgeId());
+                scoreRoleInfoList = scoreRoleInfoMapper.getScoreRoleList(searchInfo);
                 if (scoreRoleInfoList != null && scoreRoleInfoList.size() > 0){
                     scoreInfos.get(i).setScoreRoleInfoList(scoreRoleInfoList);
                 }
@@ -64,10 +68,14 @@ public class ScoreController {
     public Map<String,String> checkScoreByJudgeId(ScoreInfo scoreInfo){
         Map<String, String> param = new HashMap<>();
         String checkFlag = "failed";
-        List<ScoreInfo> scoreList = scoreInfoMapper.getScoreList(scoreInfo);
-        if (scoreList != null && scoreList.size() > 0){
-            checkFlag = "success";
+        GameInfo gameInfo = gameInfoMapper.getGameInfoById(scoreInfo.getGameId());
+        if (gameInfo != null && AppConstant.FLAG_DISABLE.equals(gameInfo.getChangeScoreFlag())){
+            List<ScoreInfo> scoreList = scoreInfoMapper.getScoreList(scoreInfo);
+            if (scoreList != null && scoreList.size() > 0){
+                checkFlag = "success";
+            }
         }
+
         param.put("flag", checkFlag);
         return param;
     }

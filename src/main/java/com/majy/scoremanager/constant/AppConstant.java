@@ -25,4 +25,10 @@ public interface AppConstant {
     //用户角色
     String USER_ADMIN = "0";
     String USER_MEDIUM = "1";
+
+    /**
+     * 启用禁用标识
+     */
+    String FLAG_ENABLE = "1";
+    String FLAG_DISABLE = "0";
 }

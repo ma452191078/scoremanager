@@ -20,6 +20,7 @@ public class ScoreInfo {
     //排序标志
     private String orderFlag;
     private String judgeId;
+    private String judgeName;
     private List<ScoreRoleInfo> scoreRoleInfoList;
 
     public ScoreInfo(){

@@ -61,10 +61,17 @@ public class GameInfo {
      * 比赛规则ID
      */
     private String gameRole;
+
     /**
-     * 评委实名启用标识（0不启用，1启用）
+     * 评委实名模式，0启用，1不启用
      */
-    private String gameJudge;
+    private String realNameFlag;
+
+    /**
+     * 修改评分模式，0启用，1启用
+     */
+    private String changeScoreFlag;
+
     private List<GameRoleInfo> gameRoleInfoList;
 
 

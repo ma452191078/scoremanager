@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.majy.scoremanager.mapper.JudgeInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.majy.scoremanager.domain.JudgeInfo" >
+        <id column="judgeId" property="judgeId" jdbcType="VARCHAR" />
+        <result column="judgeName" property="judgeName" jdbcType="VARCHAR" />
+        <result column="gameId" property="gameId" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getAll" resultType="list" resultMap="BaseResultMap"  >
+        SELECT
+        *
+        FROM judgeinfo
+    </select>
+
+    <select id="getJudgeInfoById" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        SELECT
+        *
+        FROM judgeinfo
+        WHERE judgeId = #{judgeId}
+    </select>
+
+    <select id="getJudgeInfoByGameId" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        SELECT
+        *
+        FROM judgeinfo
+        WHERE gameId = #{gameId}
+    </select>
+
+    <insert id="insert" parameterType="com.majy.scoremanager.domain.JudgeInfo" >
+        INSERT INTO
+        judgeinfo
+        (judgeId,judgeName,gameId)
+        VALUES
+        (#{judgeId}, #{judgeName}, #{gameId})
+    </insert>
+
+    <update id="update" parameterType="com.majy.scoremanager.domain.JudgeInfo" >
+        UPDATE
+        userinfo
+        <set>
+        <if test="judgeName != null and judgeName != ''">judgeName = #{judgeName},</if>
+        <if test="gameId != null and gameId != ''">gameId = #{gameId},</if>
+        </set>
+        WHERE
+        judgeId = #{judgeId}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String" >
+        DELETE FROM
+        judgeinfo
+        WHERE
+        judgeId =#{judgeId}
+    </delete>
+
+</mapper>
