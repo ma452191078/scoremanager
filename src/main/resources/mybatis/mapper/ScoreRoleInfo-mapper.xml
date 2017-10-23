@@ -17,23 +17,25 @@
 
     <select id="getScoreRoleList" parameterType="com.majy.scoremanager.domain.ScoreRoleInfo" resultType="list" resultMap="BaseResultMap"  >
         SELECT
-        *
-        FROM scoreroleinfo
+        a.*
+        FROM scoreroleinfo AS a
+        INNER JOIN gameroleinfo AS b ON a.roleId = b.roleId
         <where>
             <if test="scoreId != null and scoreId != '' ">
-                and scoreId = #{scoreId}
+                and a.scoreId = #{scoreId}
             </if>
             <if test="roleId != null and roleId != '' ">
-                and roleId = #{roleId}
+                and a.roleId = #{roleId}
             </if>
             <if test="playerId != null and playerId != '' ">
-                and playerId = #{playerId}
+                and a.playerId = #{playerId}
             </if>
             <if test="judgeId != null and judgeId != '' ">
-                and judgeId = #{judgeId}
+                and a.judgeId = #{judgeId}
             </if>
 
         </where>
+        ORDER BY b.roleIndex
     </select>
 
     <select id="getScoreRoleListByPlayer" parameterType="java.lang.String" resultType="list" resultMap="BaseResultMap" >

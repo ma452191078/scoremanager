@@ -150,10 +150,10 @@
                 #{gameRole},
             </if>
             <if test="realNameFlag != null and realNameFlag != '' ">
-                {realNameFlag},
+                #{realNameFlag},
             </if>
             <if test="changeScoreFlag != null and changeScoreFlag != '' ">
-                {changeScoreFlag},
+                #{changeScoreFlag},
             </if>
         </trim>
     </insert>
