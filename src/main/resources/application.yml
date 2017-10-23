@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: prd
   session:
     store-type: none
   thymeleaf:
