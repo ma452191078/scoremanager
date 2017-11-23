@@ -15,6 +15,8 @@ public interface ScoreInfoMapper {
 
     List<ScoreInfo> getScoreList(ScoreInfo scoreInfo);
 
+    int getScoreListCount(ScoreInfo scoreInfo);
+
     List<ScoreInfo> getScoreListByPlayer(String playerId);
 
     ScoreInfo getScoreInfoById(String scoreId);

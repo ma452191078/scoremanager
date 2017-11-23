@@ -3,9 +3,11 @@ package com.majy.scoremanager.controller;
 import com.majy.scoremanager.constant.AppConstant;
 import com.majy.scoremanager.domain.GameInfo;
 import com.majy.scoremanager.domain.GameRoleInfo;
+import com.majy.scoremanager.domain.ScoreInfo;
 import com.majy.scoremanager.domain.UserInfo;
 import com.majy.scoremanager.mapper.GameInfoMapper;
 import com.majy.scoremanager.mapper.GameRoleInfoMapper;
+import com.majy.scoremanager.mapper.ScoreInfoMapper;
 import com.majy.scoremanager.mapper.UserInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +33,8 @@ public class GameController {
     private GameRoleInfoMapper gameRoleInfoMapper;
     @Autowired
     private UserInfoMapper userInfoMapper;
+    @Autowired
+    private ScoreInfoMapper scoreInfoMapper;
 
     @RequestMapping("/getGameList")
     public Map<String,Object> getGameList(GameInfo gameInfo){
@@ -91,30 +95,35 @@ public class GameController {
         String addMessage = "修改失败请稍后重试。";
 
         if (gameInfo != null){
-
-            if (gameInfo.getGameRoleInfoList() != null && gameInfo.getGameRoleInfoList().size() > 0){
-                if (gameInfo.getGameId() == null || "".equals(gameInfo.getGameId())){
-                    //gameId不存在创建比赛
-                    gameInfo.setGameId(UUID.randomUUID().toString());
-                    int result = gameInfoMapper.insert(gameInfo);
-                    if (result > 0) {
-                        //创建评分规则
-                        createGameRole(gameInfo);
-                        addFlag = "success";
-                        addMessage = "比赛" + gameInfo.getGameName() + "创建成功，请为此次比赛添加选手。";
+            ScoreInfo searchInfo = new ScoreInfo();
+            searchInfo.setGameId(gameInfo.getGameId());
+            if (scoreInfoMapper.getScoreListCount(searchInfo) == 0){
+                if (gameInfo.getGameRoleInfoList() != null && gameInfo.getGameRoleInfoList().size() > 0){
+                    if (gameInfo.getGameId() == null || "".equals(gameInfo.getGameId())){
+                        //gameId不存在创建比赛
+                        gameInfo.setGameId(UUID.randomUUID().toString());
+                        int result = gameInfoMapper.insert(gameInfo);
+                        if (result > 0) {
+                            //创建评分规则
+                            createGameRole(gameInfo);
+                            addFlag = "success";
+                            addMessage = "比赛" + gameInfo.getGameName() + "创建成功，请为此次比赛添加选手。";
+                        }
+                    } else {
+                        //gameId存在修改比赛
+                        int result = gameInfoMapper.update(gameInfo);
+                        if (result > 0){
+                            //更新评分规则
+                            createGameRole(gameInfo);
+                            addFlag = "success";
+                            addMessage = "比赛" + gameInfo.getGameName() + "修改成功。";
+                        }
                     }
                 } else {
-                    //gameId存在修改比赛
-                    int result = gameInfoMapper.update(gameInfo);
-                    if (result > 0){
-                        //更新评分规则
-                        createGameRole(gameInfo);
-                        addFlag = "success";
-                        addMessage = "比赛" + gameInfo.getGameName() + "修改成功。";
-                    }
+                    addMessage = "评分项目不能为空，请输入至少一项";
                 }
             } else {
-                addMessage = "评分项目不能为空，请输入至少一项";
+                addMessage = "比赛已开始，不能进行修改";
             }
         }
         param.put("gameId",gameInfo.getGameId());
@@ -179,18 +188,37 @@ public class GameController {
      * @return 创建结果
      */
     private void createGameRole(GameInfo gameInfo){
-        //TODO 创建比赛评分规则功能
-        gameRoleInfoMapper.deleteAllByGame(gameInfo.getGameId());
+        // 创建比赛评分规则功能
         List<GameRoleInfo> roleInfoList = gameInfo.getGameRoleInfoList();
+        List<GameRoleInfo> roleInfoOldList = gameRoleInfoMapper.getGameRoleListByGame(gameInfo.getGameId());
+        Map<String,String> roleInfoListMap = new HashMap<>();
         if (roleInfoList != null && roleInfoList.size() > 0){
             //新增规则
             int i = 0;
             for (GameRoleInfo gameRoleInfo : roleInfoList){
-                gameRoleInfo.setRoleIndex(i);
-                gameRoleInfo.setRoleId(UUID.randomUUID().toString());
-                gameRoleInfo.setGameId(gameInfo.getGameId());
-                gameRoleInfoMapper.insert(gameRoleInfo);
+                if (gameRoleInfo.getRoleId() != null && !"".equals(gameRoleInfo.getRoleId())){
+                    //id存在执行更新操作
+                    gameRoleInfoMapper.update(gameRoleInfo);
+                    roleInfoListMap.put(gameRoleInfo.getRoleId(),gameRoleInfo.getRoleId());
+                }else {
+                    //ID不存在执行新增
+                    gameRoleInfo.setRoleId(UUID.randomUUID().toString());
+                    gameRoleInfo.setGameId(gameInfo.getGameId());
+                    gameRoleInfoMapper.insert(gameRoleInfo);
+                }
                 i ++ ;
+            }
+
+            /**
+             * 遍历旧的规则信息，如果Map中无此项则删除
+             */
+            if (!roleInfoListMap.isEmpty()){
+                for (GameRoleInfo gameRoleInfo : roleInfoOldList){
+                    String roleId = roleInfoListMap.get(gameRoleInfo.getRoleId());
+                    if (roleId == null || "".equals(roleId)){
+                        gameRoleInfoMapper.delete(gameRoleInfo.getRoleId());
+                    }
+                }
             }
         }
     }

@@ -40,6 +40,30 @@
         </where>
     </select>
 
+    <select id="getScoreListCount" parameterType="com.majy.zlj.qualityprize.domain.ScoreInfo" resultType="int" >
+        SELECT
+        COUNT(*)
+        FROM scoreinfo
+        <where>
+            <if test="scoreId != null and scoreId != '' ">
+                and scoreId = #{scoreId}
+            </if>
+            <if test="gameId != null and gameId != '' ">
+                and gameId = #{gameId}
+            </if>
+            <if test="playerId != null and playerId != '' ">
+                and playerId = #{playerId}
+            </if>
+            <if test="addTime != null and addTime != '' ">
+                and addTime = #{addTime}
+            </if>
+            <if test="judgeId != null and judgeId != '' ">
+                and judgeId = #{judgeId}
+            </if>
+
+        </where>
+    </select>
+
     <select id="getScoreListByPlayer" parameterType="java.lang.String" resultType="list" resultMap="BaseResultMap" >
         SELECT
         *
