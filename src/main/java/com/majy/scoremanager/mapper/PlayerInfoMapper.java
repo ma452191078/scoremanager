@@ -3,6 +3,7 @@ package com.majy.scoremanager.mapper;
 import com.majy.scoremanager.domain.PlayerInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by majingyuan on 2017/5/28.
@@ -17,7 +18,11 @@ public interface PlayerInfoMapper {
 
     List<PlayerInfo> getPlayerList(PlayerInfo playerInfo);
 
+    List<PlayerInfo> getAvgListByPlayer(String gameId);
+
     PlayerInfo getPlayerInfoById(String playerId);
+
+    List<PlayerInfo> getPlayerListByJudge(Map param);
 
     int insert(PlayerInfo playerInfo);
 

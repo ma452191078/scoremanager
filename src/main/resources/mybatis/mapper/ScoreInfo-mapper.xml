@@ -40,7 +40,7 @@
         </where>
     </select>
 
-    <select id="getScoreListCount" parameterType="com.majy.zlj.qualityprize.domain.ScoreInfo" resultType="int" >
+    <select id="getScoreListCount" parameterType="com.majy.scoremanager.domain.ScoreInfo" resultType="int" >
         SELECT
         COUNT(*)
         FROM scoreinfo

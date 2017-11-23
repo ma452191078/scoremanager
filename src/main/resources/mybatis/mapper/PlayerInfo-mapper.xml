@@ -70,6 +70,21 @@
         WHERE playerId = #{playerId}
     </select>
 
+    <select id="getPlayerListByJudge" parameterType="java.util.Map" resultMap="BaseResultMap" >
+        SELECT DISTINCT
+        playerId
+        FROM scoreinfo
+        WHERE gameId = #{gameId}
+        AND judgeId = #{judgeId}
+    </select>
+
+    <select id="getAvgListByPlayer" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT b.playerNum,b.playerDepartment, b.playerId, b.gameId, b.playerName, b.playerRanking,SUM(a.scoreValue) AS playerSum, ROUND(AVG(a.scoreValue),2) AS playerAverage
+        FROM scoreinfo a
+        INNER JOIN playerinfo b ON a.playerId = b.playerId AND a.gameId = b.gameId
+        WHERE a.gameId = #{gameId} GROUP BY a.playerId ORDER BY playerAverage DESC, playerName
+    </select>
+
     <insert id="insert" parameterType="com.majy.scoremanager.domain.PlayerInfo" >
         INSERT INTO
         playerinfo

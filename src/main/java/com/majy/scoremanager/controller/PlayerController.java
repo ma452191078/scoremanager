@@ -50,13 +50,39 @@ public class PlayerController {
      * @return List<PlayerInfo> 选手列表
      */
     @RequestMapping("/getPlayerListByGame")
-    public Map<String, Object> getPlayerListByGame(@RequestParam("gameId") String gameId){
+    public Map<String, Object> getPlayerListByGame(@RequestParam("gameId") String gameId,
+                                                   @RequestParam("judgeId") String judgeId){
         Map<String, Object> param = new HashMap<>();
         List<PlayerInfo> playerInfos = null;
+        List<PlayerInfo> scoreList = null;
         GameInfo gameInfo = new GameInfo();
         if (gameId != null && !"".equals(gameId)){
             gameInfo = gameInfoMapper.getGameInfoById(gameId);
             playerInfos = playerInfoMapper.getPlayerListByGameId(gameId);
+
+            if (judgeId != null && playerInfos != null && playerInfos.size() > 0 ){
+                Map<String, String> scoreMap = new HashMap<>();
+                Map<String, String> searchMap = new HashMap<>();
+                searchMap.put("gameId", gameId);
+                searchMap.put("judgeId", judgeId);
+
+                scoreList = playerInfoMapper.getPlayerListByJudge(searchMap);
+                if (scoreList != null && scoreList.size() > 0){
+
+                    for (PlayerInfo item : scoreList) {
+                        scoreMap.put(item.getPlayerId(), "1");
+                    }
+                }
+
+                for (int i = 0; i < playerInfos.size(); i++) {
+
+                    if ("1".equals(scoreMap.get(playerInfos.get(i).getPlayerId()))){
+                        playerInfos.get(i).setPlayerIsScore("1");
+                    }else {
+                        playerInfos.get(i).setPlayerIsScore("0");
+                    }
+                }
+            }
 
             List<GameRoleInfo> result = gameRoleInfoMapper.getGameRoleListByGame(gameId);
             if (result != null && result.size() > 0){
@@ -219,4 +245,57 @@ public class PlayerController {
         return param;
     }
 
+    /**
+     * 查询比赛结果
+     * @param gameId
+     * @return
+     */
+    @RequestMapping("/getPlayerScoreListFroResult")
+    public Map<String, Object> getPlayerScoreListFroResult(String gameId){
+        Map<String, Object> param = new HashMap<>();
+
+        GameInfo gameInfo = gameInfoMapper.getGameInfoById(gameId);
+        List<GameRoleInfo> gameRoleInfos = gameRoleInfoMapper.getGameRoleListByGame(gameInfo.getGameId());
+        gameInfo.setGameRoleInfoList(gameRoleInfos);
+        gameInfo.setSumScore(new BigDecimal(0));
+        if (gameRoleInfos != null && gameRoleInfos.size() > 0){
+            for (GameRoleInfo info : gameRoleInfos){
+                gameInfo.setSumScore(gameInfo.getSumScore().add(info.getRoleScore()));
+            }
+        }else{
+            gameInfo.setSumScore(new BigDecimal(100));
+        }
+
+        List<PlayerInfo> playerInfos = playerInfoMapper.getAvgListByPlayer(gameId);
+        //对选手得分进行排序
+
+        if (playerInfos.size() > 0){
+            sortPlayerScore(playerInfos);
+        }
+
+        param.put("gameInfo", gameInfo);
+        param.put("playerResult", playerInfos);
+        return param;
+    }
+
+    /**
+     * 排序
+     * @param playerInfoList
+     * @return
+     */
+    private List<PlayerInfo> sortPlayerScore(List<PlayerInfo> playerInfoList){
+        PlayerInfo tempPlayer = new PlayerInfo();
+        if (playerInfoList != null && playerInfoList.size() > 0){
+            for (int i = 0; i < playerInfoList.size(); i++) {
+                if (i > 0 && playerInfoList.get(i).getPlayerAverage().equals(tempPlayer.getPlayerAverage())){
+                    playerInfoList.get(i).setPlayerRanking(tempPlayer.getPlayerRanking());
+                }else{
+                    playerInfoList.get(i).setPlayerRanking(i + 1);
+                }
+                tempPlayer = playerInfoList.get(i);
+            }
+        }
+
+        return playerInfoList;
+    }
 }

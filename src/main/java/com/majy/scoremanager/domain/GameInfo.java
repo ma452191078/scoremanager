@@ -2,6 +2,7 @@ package com.majy.scoremanager.domain;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -73,6 +74,11 @@ public class GameInfo {
     private String changeScoreFlag;
 
     private List<GameRoleInfo> gameRoleInfoList;
+
+    /**
+     * 比赛总分
+     */
+    private BigDecimal sumScore;
 
 
 }

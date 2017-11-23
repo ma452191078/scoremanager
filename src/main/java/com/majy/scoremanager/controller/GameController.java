@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -79,7 +80,16 @@ public class GameController {
     @RequestMapping("/getGameInfoById")
     public GameInfo getGameInfoById(@RequestParam("gameId") String gameId){
         GameInfo gameInfo = gameInfoMapper.getGameInfoById(gameId);
-        gameInfo.setGameRoleInfoList(gameRoleInfoMapper.getGameRoleListByGame(gameInfo.getGameId()));
+        List<GameRoleInfo> gameRoleInfos = gameRoleInfoMapper.getGameRoleListByGame(gameInfo.getGameId());
+        gameInfo.setGameRoleInfoList(gameRoleInfos);
+
+        if (gameRoleInfos != null && gameRoleInfos.size() > 0){
+            for (GameRoleInfo info : gameRoleInfos){
+                gameInfo.setSumScore(gameInfo.getSumScore().add(info.getRoleScore()));
+            }
+        }else{
+            gameInfo.setSumScore(new BigDecimal(100));
+        }
         return gameInfo;
     }
 
