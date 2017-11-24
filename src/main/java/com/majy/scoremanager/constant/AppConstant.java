@@ -31,4 +31,6 @@ public interface AppConstant {
      */
     String FLAG_ENABLE = "0";
     String FLAG_DISABLE = "1";
+
+    String REDIRECT_URI = "http://weixin.shidanli.cn/scoremanager/wechat/getUserInfo";
 }

@@ -14,3 +14,7 @@ myscore:
   imgDictory: static/
 
 
+wechatConfig:
+  corpId: wxe83ec6aeca12528c
+  agentId: 1000009
+  secret: C-yy46BYclmIklJesMfcpNgbHb4g4WY_a_o5iCnaQAc

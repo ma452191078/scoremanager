@@ -44,31 +44,33 @@ public class GameController {
             gameInfo = new GameInfo();
         }
         UserInfo loginUser = userInfoMapper.getUserInfoById(gameInfo.getAddBy());
-        if (AppConstant.USER_ADMIN.equals(loginUser.getUserRole())){
-            gameInfo.setAddBy("");
-        }
+        if (loginUser != null){
+            if (AppConstant.USER_ADMIN.equals(loginUser.getUserRole())){
+                gameInfo.setAddBy("");
+            }
 
-        List<GameInfo> gameInfoList = gameInfoMapper.getGameList(gameInfo);
-        if (gameInfoList != null && gameInfoList.size() > 0){
-            for (int i = 0; i < gameInfoList.size(); i ++){
+            List<GameInfo> gameInfoList = gameInfoMapper.getGameList(gameInfo);
+            if (gameInfoList != null && gameInfoList.size() > 0){
+                for (int i = 0; i < gameInfoList.size(); i ++){
 
-                switch (gameInfoList.get(i).getGameActive()){
-                    case "0":
-                        gameInfoList.get(i).setGameStatus("进行中");
-                        break;
-                    case "1":
-                        gameInfoList.get(i).setGameStatus("已结束");
-                        break;
-                    default:
-                        break;
-                }
-                List<GameRoleInfo> result = gameRoleInfoMapper.getGameRoleListByGame(gameInfoList.get(i).getGameId());
-                if (result != null && result.size() > 0){
-                    gameInfoList.get(i).setGameRoleInfoList(result);
+                    switch (gameInfoList.get(i).getGameActive()){
+                        case "0":
+                            gameInfoList.get(i).setGameStatus("进行中");
+                            break;
+                        case "1":
+                            gameInfoList.get(i).setGameStatus("已结束");
+                            break;
+                        default:
+                            break;
+                    }
+                    List<GameRoleInfo> result = gameRoleInfoMapper.getGameRoleListByGame(gameInfoList.get(i).getGameId());
+                    if (result != null && result.size() > 0){
+                        gameInfoList.get(i).setGameRoleInfoList(result);
+                    }
                 }
             }
+            map.put("gameList", gameInfoList);
         }
-        map.put("gameList", gameInfoList);
         return map;
     }
 
@@ -107,7 +109,9 @@ public class GameController {
         if (gameInfo != null){
             ScoreInfo searchInfo = new ScoreInfo();
             searchInfo.setGameId(gameInfo.getGameId());
-            if (scoreInfoMapper.getScoreListCount(searchInfo) == 0){
+            if (scoreInfoMapper.getScoreListCount(searchInfo) > 0){
+                addMessage = "比赛已开始，不能进行修改";
+            } else {
                 if (gameInfo.getGameRoleInfoList() != null && gameInfo.getGameRoleInfoList().size() > 0){
                     if (gameInfo.getGameId() == null || "".equals(gameInfo.getGameId())){
                         //gameId不存在创建比赛
@@ -132,8 +136,6 @@ public class GameController {
                 } else {
                     addMessage = "评分项目不能为空，请输入至少一项";
                 }
-            } else {
-                addMessage = "比赛已开始，不能进行修改";
             }
         }
         param.put("gameId",gameInfo.getGameId());
