@@ -84,7 +84,7 @@ public class GameController {
         GameInfo gameInfo = gameInfoMapper.getGameInfoById(gameId);
         List<GameRoleInfo> gameRoleInfos = gameRoleInfoMapper.getGameRoleListByGame(gameInfo.getGameId());
         gameInfo.setGameRoleInfoList(gameRoleInfos);
-
+        gameInfo.setSumScore(new BigDecimal(0));
         if (gameRoleInfos != null && gameRoleInfos.size() > 0){
             for (GameRoleInfo info : gameRoleInfos){
                 gameInfo.setSumScore(gameInfo.getSumScore().add(info.getRoleScore()));

@@ -5,8 +5,13 @@ import com.majy.scoremanager.domain.JudgeInfo;
 import com.majy.scoremanager.domain.ScoreRoleInfo;
 import com.majy.scoremanager.mapper.JudgeInfoMapper;
 import com.majy.scoremanager.mapper.ScoreRoleInfoMapper;
+import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.cp.api.WxCpOAuth2Service;
+import me.chanjar.weixin.cp.api.WxCpService;
+import me.chanjar.weixin.cp.bean.WxCpUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -25,6 +30,9 @@ public class JudgeController {
 
     @Autowired
     private JudgeInfoMapper judgeInfoMapper;
+
+    @Autowired
+    private WxCpService wxCpService;
 
     /**
      * 查询裁判信息
@@ -56,20 +64,33 @@ public class JudgeController {
 
     /**
      * 创建评委
-     * @param judgeInfo
+     * @param gameId 比赛ID
+     * @param code 微信返回的code参数
      * @return
      */
     @RequestMapping("/createJudge")
-    public Map<String, Object> createJudge(JudgeInfo judgeInfo){
+    public Map<String, Object> createJudge(@RequestParam("gameId") String gameId, @RequestParam("code") String code) throws WxErrorException {
         Map<String,Object> map = new HashMap<String, Object>();
         int errFlag = AppConstant.DB_WRITE_FAILED;
         String errMsg = "信息创建失败，请重试";
-        if (judgeInfo != null){
-            judgeInfo.setJudgeId(UUID.randomUUID().toString());
-            if (judgeInfoMapper.insert(judgeInfo) > 0){
-                errFlag = AppConstant.DB_WRITE_SUCCESS;
-                errMsg = "创建成功";
+        JudgeInfo judgeInfo = new JudgeInfo();
+        judgeInfo.setGameId(gameId);
+        if (code != null){
+            WxCpOAuth2Service wxCpOAuth2Service = wxCpService.getOauth2Service();
+            String[] res = wxCpOAuth2Service.getUserInfo(code);
+            WxCpUser wxCpUser = wxCpService.getUserService().getById(res[0]);
+
+            if (wxCpUser != null){
+                judgeInfo.setJudgeId(wxCpUser.getUserId());
+                judgeInfo.setJudgeName(wxCpUser.getName());
             }
+        } else {
+            judgeInfo.setJudgeId(UUID.randomUUID().toString());
+            judgeInfo.setJudgeName(AppConstant.JUDGE_NAME);
+        }
+        if (judgeInfoMapper.insert(judgeInfo) > 0){
+            errFlag = AppConstant.DB_WRITE_SUCCESS;
+            errMsg = "创建成功";
         }
 
         map.put("judgeInfo", judgeInfo);

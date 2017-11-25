@@ -32,5 +32,9 @@ public interface AppConstant {
     String FLAG_ENABLE = "0";
     String FLAG_DISABLE = "1";
 
-    String REDIRECT_URI = "http://weixin.shidanli.cn/scoremanager/wechat/getUserInfo";
+    /**
+     * 评委默认名称
+     */
+    String JUDGE_NAME = "评委";
+
 }
