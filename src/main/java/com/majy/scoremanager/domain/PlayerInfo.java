@@ -65,4 +65,6 @@ public class PlayerInfo {
      */
     private String playerIsScore;
 
+    private String judgeId;
+
 }

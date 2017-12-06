@@ -4,6 +4,7 @@ import com.majy.scoremanager.constant.AppConstant;
 import com.majy.scoremanager.domain.*;
 import com.majy.scoremanager.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -85,6 +86,56 @@ public class PlayerController {
             }
 
             List<GameRoleInfo> result = gameRoleInfoMapper.getGameRoleListByGame(gameId);
+            if (result != null && result.size() > 0){
+                gameInfo.setGameRoleInfoList(result);
+            }
+
+        }
+        param.put("gameInfo", gameInfo);
+        param.put("playerList", playerInfos);
+        return param;
+    }
+
+    /**
+     * 根据比赛ID查询对应选手列表，依据选手名次和选手序号排序
+     * @param playerInfo 比赛id
+     * @return List<PlayerInfo> 选手列表
+     */
+    @RequestMapping("/getPlayerListByGameReact")
+    public Map<String, Object> getPlayerListByGameReact(@RequestBody PlayerInfo playerInfo){
+        Map<String, Object> param = new HashMap<>();
+        List<PlayerInfo> playerInfos = null;
+        List<PlayerInfo> scoreList = null;
+        GameInfo gameInfo = new GameInfo();
+        if (playerInfo.getGameId() != null && !"".equals(playerInfo.getGameId())){
+            gameInfo = gameInfoMapper.getGameInfoById(playerInfo.getGameId());
+            playerInfos = playerInfoMapper.getPlayerListByGameId(playerInfo.getGameId());
+
+            if (playerInfo.getJudgeId() != null && playerInfos != null && playerInfos.size() > 0 ){
+                Map<String, String> scoreMap = new HashMap<>();
+                Map<String, String> searchMap = new HashMap<>();
+                searchMap.put("gameId", playerInfo.getGameId());
+                searchMap.put("judgeId", playerInfo.getJudgeId());
+
+                scoreList = playerInfoMapper.getPlayerListByJudge(searchMap);
+                if (scoreList != null && scoreList.size() > 0){
+
+                    for (PlayerInfo item : scoreList) {
+                        scoreMap.put(item.getPlayerId(), "1");
+                    }
+                }
+
+                for(int i = 0; i < playerInfos.size(); i++) {
+
+                    if ("1".equals(scoreMap.get(playerInfos.get(i).getPlayerId()))){
+                        playerInfos.get(i).setPlayerIsScore("1");
+                    }else {
+                        playerInfos.get(i).setPlayerIsScore("0");
+                    }
+                }
+            }
+
+            List<GameRoleInfo> result = gameRoleInfoMapper.getGameRoleListByGame(playerInfo.getGameId());
             if (result != null && result.size() > 0){
                 gameInfo.setGameRoleInfoList(result);
             }

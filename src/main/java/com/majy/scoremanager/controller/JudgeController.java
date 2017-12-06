@@ -73,22 +73,31 @@ public class JudgeController {
         Map<String,Object> map = new HashMap<String, Object>();
         int errFlag = AppConstant.DB_WRITE_FAILED;
         String errMsg = "信息创建失败，请重试";
-        JudgeInfo judgeInfo = new JudgeInfo();
-        judgeInfo.setGameId(gameId);
+        JudgeInfo judgeInfo = null;
         if (code != null){
             WxCpOAuth2Service wxCpOAuth2Service = wxCpService.getOauth2Service();
-            String[] res = wxCpOAuth2Service.getUserInfo(code);
-            WxCpUser wxCpUser = wxCpService.getUserService().getById(res[0]);
-
-            if (wxCpUser != null){
-                judgeInfo.setJudgeId(wxCpUser.getUserId());
-                judgeInfo.setJudgeName(wxCpUser.getName());
+            WxCpUser wxCpUser = null;
+            try {
+                String[] res = wxCpOAuth2Service.getUserInfo(code);
+                wxCpUser = wxCpService.getUserService().getById(res[0]);
+                if (wxCpUser != null){
+                    judgeInfo = new JudgeInfo();
+                    judgeInfo.setGameId(gameId);
+                    judgeInfo.setJudgeId(wxCpUser.getUserId());
+                    judgeInfo.setJudgeName(wxCpUser.getName());
+                }
+            } catch (WxErrorException e) {
+                ///e.printStackTrace();
+                System.out.println(e.getMessage());
+                errMsg = "未查询到用户信息，请先开通企业微信或关注掌上史丹利。";
             }
         } else {
+            judgeInfo = new JudgeInfo();
+            judgeInfo.setGameId(gameId);
             judgeInfo.setJudgeId(UUID.randomUUID().toString());
             judgeInfo.setJudgeName(AppConstant.JUDGE_NAME);
         }
-        if (judgeInfoMapper.insert(judgeInfo) > 0){
+        if (judgeInfo != null && judgeInfoMapper.insert(judgeInfo) > 0){
             errFlag = AppConstant.DB_WRITE_SUCCESS;
             errMsg = "创建成功";
         }

@@ -42,10 +42,17 @@ public class WechatController {
     }
 
     @RequestMapping("/getUserInfo")
-    public String getUserInfo(@RequestParam("code") String code) throws WxErrorException {
+    public String getUserInfo(@RequestParam("code") String code) {
         WxCpOAuth2Service wxCpOAuth2Service = wxCpService.getOauth2Service();
-        String[] res = wxCpOAuth2Service.getUserInfo(code);
-        WxCpUser wxCpUser = wxCpService.getUserService().getById(res[0]);
-        return wxCpUser.toJson();
+        WxCpUser wxCpUser = null;
+        String[] res = new String[0];
+        try {
+            res = wxCpOAuth2Service.getUserInfo(code);
+            wxCpUser = wxCpService.getUserService().getById(res[0]);
+            return wxCpUser.toJson();
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
