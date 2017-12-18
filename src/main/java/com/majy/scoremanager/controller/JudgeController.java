@@ -10,6 +10,7 @@ import me.chanjar.weixin.cp.api.WxCpOAuth2Service;
 import me.chanjar.weixin.cp.api.WxCpService;
 import me.chanjar.weixin.cp.bean.WxCpUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,7 +72,7 @@ public class JudgeController {
     @RequestMapping("/createJudge")
     public Map<String, Object> createJudge(@RequestParam("gameId") String gameId, @RequestParam("code") String code) throws WxErrorException {
         Map<String,Object> map = new HashMap<String, Object>();
-        int errFlag = AppConstant.DB_WRITE_FAILED;
+        int errFlag = 99;
         String errMsg = "信息创建失败，请重试";
         JudgeInfo judgeInfo = null;
         if (code != null){
@@ -89,6 +90,7 @@ public class JudgeController {
             } catch (WxErrorException e) {
                 ///e.printStackTrace();
                 System.out.println(e.getMessage());
+                errFlag = AppConstant.DB_WRITE_FAILED;
                 errMsg = "未查询到用户信息，请先开通企业微信或关注掌上史丹利。";
             }
         } else {
@@ -97,9 +99,18 @@ public class JudgeController {
             judgeInfo.setJudgeId(UUID.randomUUID().toString());
             judgeInfo.setJudgeName(AppConstant.JUDGE_NAME);
         }
-        if (judgeInfo != null && judgeInfoMapper.insert(judgeInfo) > 0){
-            errFlag = AppConstant.DB_WRITE_SUCCESS;
-            errMsg = "创建成功";
+        if (errFlag != AppConstant.DB_WRITE_FAILED){
+            List<JudgeInfo> infos = judgeInfoMapper.getList(judgeInfo);
+            if (infos != null && infos.size() > 0){
+                judgeInfo = infos.get(0);
+                errFlag = AppConstant.DB_WRITE_SUCCESS;
+                errMsg = "评委已存在";
+            }else{
+                judgeInfoMapper.insert(judgeInfo);
+                errFlag = AppConstant.DB_WRITE_SUCCESS;
+                errMsg = "创建成功";
+
+            }
         }
 
         map.put("judgeInfo", judgeInfo);
@@ -107,6 +118,21 @@ public class JudgeController {
         map.put("errMsg", errMsg);
         return map;
 
+    }
+
+    @RequestMapping("/createJudgeReact")
+    public Map<String,Object> createJudgeReact(@RequestBody JudgeInfo judgeInfo){
+        Map<String, Object> map = null;
+        try {
+            System.out.println(judgeInfo.getCode());
+            System.out.println(judgeInfo.getGameId());
+            map = createJudge(judgeInfo.getGameId(), judgeInfo.getCode());
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+            map.put("errFlag", AppConstant.DB_WRITE_FAILED);
+            map.put("errMsg", "创建失败，请重试");
+        }
+        return map;
     }
     
 }

@@ -21,4 +21,6 @@ public class JudgeInfo {
      * 比赛ID
      */
     private String gameId;
+
+    private String code;
 }

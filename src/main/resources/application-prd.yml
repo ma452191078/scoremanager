@@ -1,5 +1,3 @@
-server:
-  port: 8080
 
 spring:
   datasource:
@@ -23,4 +21,4 @@ wechatConfig:
   corpId: wxe83ec6aeca12528c
   agentId: 1000009
   secret: C-yy46BYclmIklJesMfcpNgbHb4g4WY_a_o5iCnaQAc
-  redirectUrl: http://weixin.shidanli.cn:8081/scoremanager_ui/mobile/index.html?gameId=GAMEID
+  redirectUrl: http://weixin.shidanli.cn:8083?gameId=GAMEID

@@ -18,6 +18,13 @@ public interface JudgeInfoMapper {
     List<JudgeInfo> getAll();
 
     /**
+     * 查询评委列表
+     * @param judgeInfo
+     * @return
+     */
+    List<JudgeInfo> getList(JudgeInfo judgeInfo);
+
+    /**
      * 查询评委信息
      * @param judgeId
      * @return

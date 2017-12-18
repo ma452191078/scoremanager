@@ -13,6 +13,23 @@
         FROM judgeinfo
     </select>
 
+    <select id="getList" resultType="list" resultMap="BaseResultMap" parameterType="com.majy.scoremanager.domain.JudgeInfo">
+        SELECT
+        *
+        FROM judgeinfo
+        <where>
+            <if test="gameId != null and gameId != '' ">
+                and gameId = #{gameId}
+            </if>
+            <if test="judgeId != null and judgeId != '' ">
+                and judgeId = #{judgeId}
+            </if>
+            <if test="judgeName != null and judgeName != '' ">
+                and judgeName = #{judgeName}
+            </if>
+        </where>
+    </select>
+
     <select id="getJudgeInfoById" parameterType="java.lang.String" resultMap="BaseResultMap" >
         SELECT
         *

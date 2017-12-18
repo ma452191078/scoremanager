@@ -1,14 +1,12 @@
 package com.majy.scoremanager.controller;
 
 import com.majy.scoremanager.constant.AppConstant;
-import com.majy.scoremanager.domain.GameInfo;
-import com.majy.scoremanager.domain.PlayerInfo;
-import com.majy.scoremanager.domain.ScoreInfo;
-import com.majy.scoremanager.domain.ScoreRoleInfo;
+import com.majy.scoremanager.domain.*;
 import com.majy.scoremanager.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -45,8 +43,15 @@ public class ScoreController {
 
         if (scoreInfos != null && scoreInfos.size() > 0){
             List<ScoreRoleInfo> scoreRoleInfoList = null;
+            JudgeInfo judgeSearchInfo = new JudgeInfo();
             for (int i = 0; i < scoreInfos.size(); i++) {
-                scoreInfos.get(i).setJudgeName(judgeInfoMapper.getJudgeInfoById(scoreInfos.get(i).getJudgeId()).getJudgeName());
+                //查询评委信息
+                judgeSearchInfo.setJudgeId(scoreInfos.get(i).getJudgeId());
+                judgeSearchInfo.setGameId(scoreInfos.get(i).getGameId());
+                List<JudgeInfo> judgeList = judgeInfoMapper.getList(judgeSearchInfo);
+                if (judgeList != null && judgeList.size() > 0){
+                    scoreInfos.get(i).setJudgeName(judgeList.get(0).getJudgeName());
+                }
                 ScoreRoleInfo searchInfo = new ScoreRoleInfo();
                 searchInfo.setPlayerId(scoreInfos.get(i).getPlayerId());
                 searchInfo.setJudgeId(scoreInfos.get(i).getJudgeId());
@@ -78,6 +83,16 @@ public class ScoreController {
 
         param.put("flag", checkFlag);
         return param;
+    }
+
+    /**
+     * 检查评委是否已经打分
+     * @param scoreInfo
+     * @return
+     */
+    @RequestMapping("/checkScoreByJudgeIdReact")
+    public Map<String,String> checkScoreByJudgeIdReact(@RequestBody ScoreInfo scoreInfo){
+        return checkScoreByJudgeId(scoreInfo);
     }
 
     /**
