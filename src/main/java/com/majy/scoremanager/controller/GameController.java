@@ -105,26 +105,25 @@ public class GameController {
         Map<String, String> param = new HashMap<>();
         String addFlag = "failed";
         String addMessage = "修改失败请稍后重试。";
-
         if (gameInfo != null){
-            ScoreInfo searchInfo = new ScoreInfo();
-            searchInfo.setGameId(gameInfo.getGameId());
-            if (scoreInfoMapper.getScoreListCount(searchInfo) > 0){
-                addMessage = "比赛已开始，不能进行修改";
-            } else {
-                if (gameInfo.getGameRoleInfoList() != null && gameInfo.getGameRoleInfoList().size() > 0){
-                    if (gameInfo.getGameId() == null || "".equals(gameInfo.getGameId())){
-                        //gameId不存在创建比赛
-                        gameInfo.setGameId(UUID.randomUUID().toString());
-                        int result = gameInfoMapper.insert(gameInfo);
-                        if (result > 0) {
-                            //创建评分规则
-                            createGameRole(gameInfo);
-                            addFlag = "success";
-                            addMessage = "比赛" + gameInfo.getGameName() + "创建成功，请为此次比赛添加选手。";
-                        }
+            if (gameInfo.getGameRoleInfoList() != null && gameInfo.getGameRoleInfoList().size() > 0){
+                if (gameInfo.getGameId() == null || "".equals(gameInfo.getGameId())){
+                    //gameId不存在创建比赛
+                    gameInfo.setGameId(UUID.randomUUID().toString());
+                    int result = gameInfoMapper.insert(gameInfo);
+                    if (result > 0) {
+                        //创建评分规则
+                        createGameRole(gameInfo);
+                        addFlag = "success";
+                        addMessage = "比赛" + gameInfo.getGameName() + "创建成功，请为此次比赛添加选手。";
+                    }
+                } else {
+                    //gameId存在修改比赛
+                    ScoreInfo searchInfo = new ScoreInfo();
+                    searchInfo.setGameId(gameInfo.getGameId());
+                    if (scoreInfoMapper.getScoreListCount(searchInfo) > 0){
+                        addMessage = "比赛已开始，不能进行修改";
                     } else {
-                        //gameId存在修改比赛
                         int result = gameInfoMapper.update(gameInfo);
                         if (result > 0){
                             //更新评分规则
@@ -133,9 +132,9 @@ public class GameController {
                             addMessage = "比赛" + gameInfo.getGameName() + "修改成功。";
                         }
                     }
-                } else {
-                    addMessage = "评分项目不能为空，请输入至少一项";
                 }
+            } else {
+                addMessage = "评分项目不能为空，请输入至少一项";
             }
         }
         param.put("gameId",gameInfo.getGameId());
