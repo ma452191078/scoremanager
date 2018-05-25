@@ -85,6 +85,13 @@
         WHERE a.gameId = #{gameId} GROUP BY a.playerId ORDER BY playerAverage DESC, playerName
     </select>
 
+    <select id="getScoreListByGameId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT b.playerNum,b.playerDepartment, b.playerId, b.gameId, b.playerName, b.playerRanking,a.scoreValue as playerSum
+        FROM scoreinfo a
+        INNER JOIN playerinfo b ON a.playerId = b.playerId AND a.gameId = b.gameId
+        WHERE a.gameId = #{gameId} ORDER BY b.playerId, playerSum
+    </select>
+
     <insert id="insert" parameterType="com.majy.scoremanager.domain.PlayerInfo" >
         INSERT INTO
         playerinfo

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static java.math.BigDecimal.ROUND_HALF_DOWN;
+
 /**
  * Created by majingyuan on 2017/5/28.
  * 参赛选手
@@ -317,13 +319,46 @@ public class PlayerController {
             gameInfo.setSumScore(new BigDecimal(100));
         }
 
-        List<PlayerInfo> playerInfos = playerInfoMapper.getAvgListByPlayer(gameId);
-        //对选手得分进行排序
+        //查询所有选手得分
+        List<PlayerInfo> playerInfos = new ArrayList<>();
+        List<PlayerInfo> scoreList = playerInfoMapper.getScoreListByGameId(gameId);
+        List<PlayerInfo> playerList = playerInfoMapper.getPlayerListByGameId(gameId);
+        if (scoreList != null && scoreList.size() > 0){
+            //对选手得分进行排序
+            for (PlayerInfo player : playerList){
+                BigDecimal sum  = new BigDecimal(0);
+                BigDecimal avg = new BigDecimal(0);
+                List<PlayerInfo> playerScoreList = new ArrayList<>();
+//            查找选手的所有得分
+                for (int i = 0; i < scoreList.size(); i++){
+                    if (scoreList.get(i).getPlayerId().equals(player.getPlayerId())){
+                        playerScoreList.add(scoreList.get(i));
+                    }
+                }
+//            排除最大最小值并计算平均分
+                if (playerScoreList != null && playerScoreList.size()>0){
+                    if (playerScoreList.size() > 2){
+                        for (int i = 1; i < playerScoreList.size()-1; i++){
+                            sum = sum.add(playerScoreList.get(i).getPlayerSum());
+                        }
+                        avg = sum.divide(new BigDecimal(playerScoreList.size()-2),2,BigDecimal.ROUND_HALF_UP);
+                    }else if (playerScoreList.size() > 0){
+                        for (int i = 0; i < playerScoreList.size(); i++){
+                            sum = sum.add(playerScoreList.get(i).getPlayerSum());
+                        }
+                        avg = sum.divide(new BigDecimal(playerScoreList.size()),2,BigDecimal.ROUND_HALF_UP);
+                    }
 
-        if (playerInfos.size() > 0){
+                    playerScoreList.get(0).setPlayerAverage(avg);
+                    playerScoreList.get(0).setPlayerSum(sum);
+                    playerInfos.add(playerScoreList.get(0));
+                }
+            }
+        }
+        if (playerInfos != null && playerInfos.size() > 0){
+            Collections.sort(playerInfos);
             sortPlayerScore(playerInfos);
         }
-
         param.put("gameInfo", gameInfo);
         param.put("playerResult", playerInfos);
         return param;

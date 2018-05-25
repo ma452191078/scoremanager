@@ -20,6 +20,8 @@ public interface PlayerInfoMapper {
 
     List<PlayerInfo> getAvgListByPlayer(String gameId);
 
+    List<PlayerInfo> getScoreListByGameId(String gameId);
+
     PlayerInfo getPlayerInfoById(String playerId);
 
     List<PlayerInfo> getPlayerListByJudge(Map param);

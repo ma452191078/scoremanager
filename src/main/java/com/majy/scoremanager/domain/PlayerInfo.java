@@ -9,7 +9,7 @@ import java.math.BigDecimal;
  * 参赛选手类
  */
 @Data
-public class PlayerInfo {
+public class PlayerInfo implements Comparable<PlayerInfo> {
 
     /**
      * 选手ID
@@ -67,4 +67,9 @@ public class PlayerInfo {
 
     private String judgeId;
 
+    @Override
+    public int compareTo(PlayerInfo o) {
+        int i = Integer.parseInt(o.getPlayerAverage().subtract(this.getPlayerAverage()).setScale( 0, BigDecimal.ROUND_UP ).toString());
+        return i;
+    }
 }
